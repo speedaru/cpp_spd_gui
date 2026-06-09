@@ -189,8 +189,8 @@ namespace spd::core {
 		if (m_root) {
             float titlebarHeight = Application::GetTitleBarHeight();
 
-			m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
-			m_root->SetPosition(ImVec2(0, titlebarHeight)); // set root pos after title bar
+            m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
+            m_root->SetPosition(ImVec2(0, titlebarHeight)); // set root pos after title bar
 
 			m_root->Update();
 			m_root->Render();

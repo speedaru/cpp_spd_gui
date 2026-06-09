@@ -17,9 +17,9 @@ namespace spd::ui {
 		T ResolveStyle(std::optional<T> Style::* property, T defaultValue) const;
 
 		// set base size of widget
-		inline void SetBaseSize(ImVec2 newSize) { m_baseSize = newSize; }
-		inline void SetParent(Widget* parent) { m_parent = parent; }
-		inline void SetPosition(const ImVec2 newPos) { m_position = newPos; }
+		inline Widget* SetBaseSize(ImVec2 newSize) { m_baseSize = newSize; return this; }
+		inline Widget* SetParent(Widget* parent) { m_parent = parent; return this; }
+		inline Widget* SetPosition(const ImVec2 newPos) { m_position = newPos; return this; }
 
 		inline ImVec2 GetContentSize() const { return m_boxModel.contentSize; }
 		inline ImVec2 GetBoxSize() const { return m_boxModel.boxSize; }

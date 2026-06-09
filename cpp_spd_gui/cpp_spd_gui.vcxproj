@@ -166,6 +166,7 @@
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\widgets\Button.cpp" />
     <ClCompile Include="src\ui\widgets\Label.cpp" />
+    <ClCompile Include="src\ui\widgets\TextBox.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\screen.cpp" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\widgets\Button.h" />
     <ClInclude Include="include\ui\widgets\Label.h" />
+    <ClInclude Include="include\ui\widgets\TextBox.h" />
     <ClInclude Include="include\utils\screen.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="include\utils\logger.h" />

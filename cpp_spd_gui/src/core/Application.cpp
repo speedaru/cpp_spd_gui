@@ -43,7 +43,7 @@ namespace spd::core {
         return ::DefWindowProcW(hwnd, msg, wParam, lParam);
     }
 
-	Application::Application(const std::wstring& title, int width, int height, DxDevice* sharedDevice, AppConfig config)
+	Application::Application(const std::wstring& title, int width, int height, DxDevice* sharedDevice, const AppConfig& config)
         : m_isRunning(true), m_width(width), m_height(height), m_ownsDevice(false) {
         
         m_backend = std::make_unique<BackendData>();
@@ -65,6 +65,7 @@ namespace spd::core {
 
         InitImGui();
         spd::backend::CreateImGui(m_backend->dxData, m_backend->windowData, m_backend->imGuiData);
+        SetupImGui(config);
 
         // set wnd proc param
 		SetWindowLongPtrW(m_backend->windowData.hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -103,7 +104,7 @@ namespace spd::core {
 
     // ------------------------- private helpers
 
-    void Application::SetupWindow(AppConfig config) {
+    void Application::SetupWindow(const AppConfig& config) {
         WindowData& windowData = m_backend->windowData;
         if (config.borderless) {
             windowData.styles |= WS_POPUP;
@@ -134,6 +135,13 @@ namespace spd::core {
         IMGUI_CHECKVERSION();
         ImGuiContext* context = imGuiData.context = ImGui::CreateContext();
         ImGui::SetCurrentContext(context);
+    }
+
+    void Application::SetupImGui(const AppConfig& config) {
+        ImGuiIO& io = ImGui::GetIO();
+        if (config.noImGuiIni) {
+            io.IniFilename = nullptr;
+        }
     }
 
     void Application::StartRender() {

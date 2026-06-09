@@ -9,12 +9,13 @@ namespace spd::backend {
 namespace spd::core {
 	struct AppConfig {
 		bool borderless = false;
+		bool noImGuiIni = false;
 	};
 
 	class Application {
 	public:
 		Application(const std::wstring& title, int width, int height,
-			spd::backend::DxDevice* sharedDevice = nullptr, AppConfig config = {});
+			spd::backend::DxDevice* sharedDevice = nullptr, const AppConfig& config = {});
 		~Application();
 
 		void SetRoot(std::unique_ptr<ui::Container> rootWidget);
@@ -29,9 +30,11 @@ namespace spd::core {
 	private:
 		void SetupSharedDevice(spd::backend::DxDevice* sharedDevice);
 
-		void SetupWindow(AppConfig config);
-		void InitImGui();
+		void SetupWindow(const AppConfig& config);
 		void ShowWindow();
+
+		void InitImGui();
+		void SetupImGui(const AppConfig& config);
 
 		void StartRender();
 		void Render();

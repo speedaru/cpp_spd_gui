@@ -13,10 +13,12 @@ namespace spd::ui {
 		virtual void Update();
 		void Render();
 
+		template <typename T>
+		T ResolveStyle(std::optional<T> Style::* property, T defaultValue) const;
+
 		// set base size of widget
 		inline void SetBaseSize(ImVec2 newSize) { m_baseSize = newSize; }
-
-		// returns widget position
+		inline void SetParent(Widget* parent) { m_parent = parent; }
 		inline void SetPosition(const ImVec2 newPos) { m_position = newPos; }
 
 		inline ImVec2 GetContentSize() const { return m_boxModel.contentSize; }
@@ -37,8 +39,26 @@ namespace spd::ui {
 
 	protected:
 		std::string m_id;
+		Widget* m_parent{};
 		ImVec2 m_baseSize{};
 		ImVec2 m_position{};
 		BoxModel m_boxModel{ &m_style.padding, &m_style.margin };
 	};
+
+	template <typename T>
+	inline T Widget::ResolveStyle(std::optional<T> Style::* property, T defaultValue) const {
+		const Widget* current = this;
+
+		while (current != nullptr) {
+			// check if the current widget set this style property
+			if ((current->m_style.*property).has_value()) {
+				return (current->m_style.*property).value();
+			}
+			// move up to the parent
+			current = current->m_parent;
+		}
+
+		// if nobody in the tree set it use default value
+		return defaultValue;
+	}
 }

@@ -4,6 +4,10 @@
 namespace spd::ui{
 	const Offsets Offsets::ZERO{ 0.f, 0.f, 0.f, 0.f };
 
+	ImVec4 GetDefaultImGuiColor(ImGuiCol col) {
+		return ImGui::GetStyle().Colors[col];
+	}
+
 	std::string GetAlignmentStr(Alignment alignment) {
 		std::string res;
 

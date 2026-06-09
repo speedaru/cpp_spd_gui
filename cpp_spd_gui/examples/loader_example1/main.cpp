@@ -4,6 +4,7 @@
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
 #include <ui/layouts/Vbox.h>
+#include <ui/layouts/Hbox.h>
 #include <utils/logger.h>
 
 int main(int argc, char** argv) {
@@ -36,12 +37,15 @@ int main(int argc, char** argv) {
 	auto vbox1 = root->Add(spd::ui::MakeVbox());
 	//auto vbox1 = spd::ui::MakeVbox();
 	vbox1->SetTag("sub vbox");
-	vbox1->SetBaseSize({ 200.f, 150.f });
+	vbox1->SetBaseSize({ 200.f, 200.f });
 	vbox1->m_style
-		.SetAlignment(spd::ui::Alignment::BottomRight)
+		.SetAlignment(spd::ui::Alignment::Top)
 		.SetSpacing(8.f)
 		.SetPadding({ 8.f })
-		.SetMargin({ 0.f, 0.f, 0.f, 32.f })
+		.SetTextColor({ 255, 255, 0, 255 })
+		.SetBgColor({ 30, 30, 30, 255 })
+		.SetHoverColor({ 50, 50, 50, 255 })
+		.SetActiveColor({ 100, 100, 100, 255 })
 		.SetBorderColor({ 255, 0, 0, 155 })
 		.SetBorderSize(1.f);
 
@@ -57,13 +61,23 @@ int main(int argc, char** argv) {
 			.SetBorderColor({ 0, 255, 255, 155 })
 			.SetBorderSize(1.f);
 
-	vbox1->Add(spd::ui::MakeButton("button1", "button1"))
+	auto hbox1 = vbox1->Add(spd::ui::MakeHbox());
+	hbox1->SetTag("hbox1");
+	hbox1->m_style
+		.SetPadding({ 0.f })
+		.SetSpacing(8.f)
+		.SetBorderColor({ 255, 0, 0, 205 })
+		.SetBorderSize(1.f);
+
+	hbox1->Add(spd::ui::MakeLabel("click me: "))
+		->m_style
+			.SetBorderColor({ 0, 255, 255, 205 })
+			.SetBorderSize(1.f);
+
+	hbox1->Add(spd::ui::MakeButton("button1", "button1"))
 		->OnClick([] { LOG_D("clicked button\n"); })
 		->m_style
 			.SetPadding(8.f)
-			.SetBgColor({ 30, 30, 30, 255 })
-			.SetHoverColor({ 50, 50, 50, 255 })
-			.SetActiveColor({ 100, 100, 100, 255 })
 			.SetRounding(4.f)
 			.SetBorderColor({ 255, 255, 0, 155 })
 			.SetBorderSize(1.f);
@@ -71,6 +85,13 @@ int main(int argc, char** argv) {
 	vbox1->Add(spd::ui::MakeLabel("apple2", "label4"))
 		->m_style
 			.SetBorderColor({ 0, 255, 255, 155 })
+			.SetBorderSize(1.f);
+
+	vbox1->Add(spd::ui::MakeButton("button2", "button2"))
+		->OnClick([] { LOG_D("clicked button2\n"); })
+		->m_style
+			.SetPadding(4.f)
+			.SetBorderColor({ 255, 255, 0, 155 })
 			.SetBorderSize(1.f);
 
 	app.SetRoot(std::move(root));

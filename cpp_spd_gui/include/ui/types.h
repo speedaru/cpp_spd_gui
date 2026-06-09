@@ -10,6 +10,14 @@ typedef unsigned int        ImU32;  // 32-bit unsigned integer (often used to st
 	(uint8_t)(vec.w * 255) \
 })
 
+constexpr const float COLOR_TO_FLOAT = 1 / 255.f;
+#define COLOR_TO_IMVEC4(col) ImVec4({ \
+	(col.r * COLOR_TO_FLOAT), \
+	(col.g * COLOR_TO_FLOAT), \
+	(col.b * COLOR_TO_FLOAT), \
+	(col.a * COLOR_TO_FLOAT) \
+})
+
 namespace spd::ui {
 	union Color {
 		struct {
@@ -50,6 +58,8 @@ namespace spd::ui {
 		BottomLeft = Bottom | Left,
 		BottomRight = Bottom | Right,
 	};
+
+	ImVec4 GetDefaultImGuiColor(ImGuiCol col);
 
 	std::string GetAlignmentStr(Alignment alignment);
 

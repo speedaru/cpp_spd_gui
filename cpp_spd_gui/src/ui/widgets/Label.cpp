@@ -7,7 +7,11 @@ namespace spd::ui {
 
 	void Label::OnRender() {
         ImGui::SetCursorPos(m_boxModel.CalcContentPosition(m_position));
-        ImGui::TextUnformatted(m_text.c_str());
+
+		ImVec4 imguiTextColor = GetDefaultImGuiColor(ImGuiCol_Text);
+		Color color = ResolveStyle(&Style::textColor, IMVEC4_TO_COLOR(imguiTextColor));
+
+		ImGui::TextColored(COLOR_TO_IMVEC4(color), "%.*s", m_text.length(), m_text.data());
 	}
 
 	ImVec2 Label::OnCalcSize() {

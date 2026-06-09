@@ -7,8 +7,8 @@ namespace spd::ui {
 		return this;
 	}
 
-	void Button::OnRender() {
-		ImVec2 borderPos = m_boxModel.CalcBorderPosition(m_position);
+    void Button::OnRender() {
+        ImVec2 borderPos = m_boxModel.CalcBorderPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
         ImGui::SetCursorPos(borderPos);
@@ -21,24 +21,24 @@ namespace spd::ui {
         bool isActive = ImGui::IsItemActive(); // mouse held down
 
         // resolve background color
-        ImVec4 imguiButtonColor = ImGui::GetStyle().Colors[ImGuiCol_Button];
-        Color bgColor = m_style.bgColor.value_or(IMVEC4_TO_COLOR(imguiButtonColor)); // default imgui button color
+        ImVec4 imguiButtonColor = GetDefaultImGuiColor(ImGuiCol_Button);
+        Color bgColor = ResolveStyle(&Style::bgColor, IMVEC4_TO_COLOR(imguiButtonColor)); // default imgui button color
 
         // use default imgui colors if no styles specified
         if (isActive) {
-			const ImVec4& imguiButtonActive = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
-            bgColor = m_style.activeColor.value_or(IMVEC4_TO_COLOR(imguiButtonActive));
+            const ImVec4& imguiButtonActive = GetDefaultImGuiColor(ImGuiCol_ButtonActive);
+            bgColor = ResolveStyle(&Style::activeColor, IMVEC4_TO_COLOR(imguiButtonActive));
         }
         else if (isHovered) {
-			const ImVec4& imguiButtonHovered = ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered];
-            bgColor = m_style.hoverColor.value_or(IMVEC4_TO_COLOR(imguiButtonHovered));
+            const ImVec4& imguiButtonHovered = GetDefaultImGuiColor(ImGuiCol_ButtonHovered);
+            bgColor = ResolveStyle(&Style::hoverColor, IMVEC4_TO_COLOR(imguiButtonHovered));
         }
 
         // draw backgrond
         ImDrawList* drawList = ImGui::GetWindowDrawList();
-        float rounding = m_style.rounding.value_or(0.0f);
-        
-        ImVec2 screenPos = ImGui::GetItemRectMin(); 
+        float rounding = ResolveStyle(&Style::rounding, 0.0f);
+
+        ImVec2 screenPos = ImGui::GetItemRectMin();
         drawList->AddRectFilled(screenPos, { screenPos.x + boxSize.x, screenPos.y + boxSize.y }, bgColor.imu32, rounding);
 
         // draw text (centered inside button)
@@ -48,12 +48,18 @@ namespace spd::ui {
             borderPos.y + (boxSize.y - textSize.y) * 0.5f
         };
 
-        if (m_style.textColor.has_value()) ImGui::PushStyleColor(ImGuiCol_Text, m_style.textColor.value().imu32);
+        // text color
+        std::optional<Color> textColor = std::nullopt;
+        if (ResolveStyle(&Style::textColor, {}).imu32 != Color().imu32) { // no default
+            textColor = ResolveStyle(&Style::textColor, {});
+        }
+
+        if (textColor.has_value()) ImGui::PushStyleColor(ImGuiCol_Text, textColor.value().imu32);
         
         ImGui::SetCursorPos(textPos);
         ImGui::TextUnformatted(m_text.c_str());
 
-        if (m_style.textColor.has_value()) ImGui::PopStyleColor();
+        if (textColor.has_value()) ImGui::PopStyleColor();
 
         // call click callback if clicked
         if (pressed && m_onClickCallback) {

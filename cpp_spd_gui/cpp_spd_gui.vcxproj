@@ -160,6 +160,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\ui\layouts\Hbox.cpp" />
     <ClCompile Include="src\ui\layouts\Vbox.cpp" />
     <ClCompile Include="src\ui\Types.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\ui\BoxModel.h" />
     <ClInclude Include="include\ui\Container.h" />
+    <ClInclude Include="include\ui\layouts\Hbox.h" />
     <ClInclude Include="include\ui\layouts\Vbox.h" />
     <ClInclude Include="include\ui\Style.h" />
     <ClInclude Include="include\ui\Types.h" />

@@ -3,12 +3,12 @@
 #include <utils/logger.h>
 
 namespace spd::ui {
-	class Vbox : public Container {
+	class Hbox : public Container {
     public:
         ADD_CLASS_TAG;
         static constexpr const char* DEFAULT_TAG = "unnamed vbox";
 
-        Vbox(const char* tag = DEFAULT_TAG) : m_tag(tag) {}
+        Hbox(const char* tag = DEFAULT_TAG) : m_tag(tag) {}
 
 	protected:
         void OnRender() override;
@@ -16,8 +16,8 @@ namespace spd::ui {
     };
 
     template <typename... T>
-    std::unique_ptr<Vbox> MakeVbox(std::unique_ptr<T>&&... widgets) {
-        std::unique_ptr<Vbox> box = std::make_unique<Vbox>();
+    std::unique_ptr<Hbox> MakeHbox(std::unique_ptr<T>&&... widgets) {
+        std::unique_ptr<Hbox> box = std::make_unique<Hbox>();
         (box->Add(std::move(widgets)), ...);
         return box;
     }

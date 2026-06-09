@@ -15,6 +15,7 @@ namespace spd::ui {
 		template <typename T>
 		inline T* Add(std::unique_ptr<T> child) {
 			T* ptr = child.get();
+			ptr->SetParent(this);
 			m_children.push_back(std::move(child));
 			return ptr;
 		}

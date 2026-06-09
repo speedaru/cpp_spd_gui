@@ -22,10 +22,13 @@ namespace spd::core {
 		void Run();
 		void Close();
 
+		static float GetTitleBarHeight();
+
 		// retrieve device to make a second window
 		spd::backend::DxDevice* GetDevice() const;
 
-		void* GetBackend() const { return m_backend.get(); }
+		inline bool IsRunning() const { return m_isRunning; }
+		inline void* GetBackend() const { return m_backend.get(); }
 
 	private:
 		void SetupSharedDevice(spd::backend::DxDevice* sharedDevice);

@@ -60,10 +60,13 @@
     <ClCompile Include="src\ui\layouts\Vbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\types.cpp">
+    <ClCompile Include="src\ui\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\widgets\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\BoxModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,10 +131,13 @@
     <ClInclude Include="include\ui\Style.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\types.h">
+    <ClInclude Include="include\ui\Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\widgets\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\BoxModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

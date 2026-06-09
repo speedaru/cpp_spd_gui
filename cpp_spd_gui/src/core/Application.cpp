@@ -13,8 +13,10 @@ namespace spd::core {
             return true;
 
         Application* app = reinterpret_cast<Application*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA));
-        if (!app) return ::DefWindowProcW(hwnd, msg, wParam, lParam);
+        if (!app || !app->IsRunning())
+            return ::DefWindowProcW(hwnd, msg, wParam, lParam);
 
+        float titleBarHeight = Application::GetTitleBarHeight();
         auto* pBackend = reinterpret_cast<BackendData*>(app->GetBackend());
 
         switch (msg) {
@@ -30,13 +32,19 @@ namespace spd::core {
             case WM_MOUSEMOVE:
                 if (wParam == MK_LBUTTON) {
                     const auto points = MAKEPOINTS(lParam);
+                    const auto& windowSize = pBackend->windowData.size;
+                    const auto& dragStart = pBackend->dragStartPoint;
+
                     RECT rect;
                     GetWindowRect(hwnd, &rect);
                     
-                    rect.left += points.x - pBackend->dragStartPoint.x;
-                    rect.top += points.y - pBackend->dragStartPoint.y;
-                    
-                    SetWindowPos(hwnd, HWND_TOPMOST, rect.left, rect.top, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOZORDER);
+					rect.left += points.x - pBackend->dragStartPoint.x;
+					rect.top += points.y - pBackend->dragStartPoint.y;
+
+                    // ensure draging title bar and not main window
+                    if (dragStart.x >= 0 && dragStart.x <= windowSize.x && dragStart.y >= 0 && dragStart.y <= titleBarHeight) {
+						SetWindowPos(hwnd, HWND_TOPMOST, rect.left, rect.top, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOZORDER);
+                    }
                 }
                 return 0;
         }
@@ -92,6 +100,7 @@ namespace spd::core {
     void Application::Run() {
         while (m_isRunning) {
             StartRender();
+            if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
         }
@@ -99,6 +108,10 @@ namespace spd::core {
 
     void Application::Close() {
         m_isRunning = false;
+    }
+
+    float Application::GetTitleBarHeight() {
+		return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
     }
 
     DxDevice* Application::GetDevice() const {
@@ -152,7 +165,10 @@ namespace spd::core {
 		while (::PeekMessageW(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
 			::TranslateMessage(&msg);
 			::DispatchMessageW(&msg);
-			if (msg.message == WM_QUIT) { m_isRunning = false; }
+            if (msg.message == WM_QUIT) {
+                m_isRunning = false;
+                return;
+            }
 		}
 
 		ImGui_ImplDX11_NewFrame();
@@ -171,9 +187,9 @@ namespace spd::core {
             ImGuiWindowFlags_NoMove);
 
 		if (m_root) {
-			float titlebarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+            float titlebarHeight = Application::GetTitleBarHeight();
 
-			m_root->SetSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
+			m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
 			m_root->SetPosition(ImVec2(0, titlebarHeight)); // set root pos after title bar
 
 			m_root->Update();

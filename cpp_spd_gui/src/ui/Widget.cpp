@@ -3,13 +3,8 @@
 
 namespace spd::ui {
 	void Widget::Update() {
-		// get derived class size
-		m_contentSize = OnCalcSize();
-
-		// get inner size (content + padding) and add margin to get total size
-		Offsets margin = m_style.margin.value_or(Offsets::ZERO);
-		ImVec2 innerSize = GetInnerBorderSize();
-		m_totalSize = { innerSize.x += margin.Width(), innerSize.y += margin.Height() };
+		// recalc box
+		m_boxModel.Recalculate(OnCalcSize(), m_baseSize);
 	}
 
 	void Widget::Render() {
@@ -20,48 +15,17 @@ namespace spd::ui {
 		OnRender();
 	}
 
-	ImVec2 Widget::GetContentPosition() const {
-		Offsets margin = m_style.margin.value_or(Offsets::ZERO);
-        Offsets padding = m_style.padding.value_or(Offsets::ZERO);
-
-		return {
-			m_position.x + margin.left + padding.left,
-			m_position.y + margin.top + padding.top,
-		};
-	}
-
-	ImVec2 Widget::GetBorderPosition() const {
-		Offsets margin = m_style.margin.value_or(Offsets::ZERO);
-		return { m_position.x + margin.left, m_position.y + margin.top };
-	}
-
-	ImVec2 Widget::GetInnerBorderSize() const {
-		Offsets padding = m_style.padding.value_or(Offsets::ZERO);
-
-		ImVec2 calcSize = m_contentSize;
-		calcSize.x += padding.Width();
-		calcSize.y += padding.Height();
-
-		// try to use predefined size if set and bigger
-		ImVec2 innerSize;
-		innerSize.x = std::max(m_size.x, calcSize.x);
-		innerSize.y = std::max(m_size.y, calcSize.y);
-
-		return innerSize;
-	}
-
 	void Widget::RenderBorder() {
-		if (!m_style.borderColor.has_value() || !m_style.borderSize.has_value()) return;
+		if (!m_style.borderColor.has_value() || !m_style.borderSize.has_value() || !m_style.borderSize.value()) return;
 
         ImDrawList* draw = ImGui::GetForegroundDrawList();
         Color borderColor = m_style.borderColor.value();
         float borderSize = m_style.borderSize.value();
         float rounding = m_style.rounding.value_or(0.f);
 
-        ImVec2 pos = GetBorderPosition();
-        ImVec2 size = GetInnerBorderSize();
-
-        draw->AddRect(pos, pos + size, borderColor.imu32, rounding, 0, borderSize);
+        ImVec2 pos = m_boxModel.CalcBorderPosition(m_position);
+        ImVec2 boxSize = m_boxModel.boxSize;
+        draw->AddRect(pos, pos + boxSize, borderColor.imu32, rounding, 0, borderSize);
 	}
 
 	void Widget::GenerateID() {

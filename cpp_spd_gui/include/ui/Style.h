@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 #include <imgui/imgui.h>
-#include "types.h"
+#include <ui/Types.h>
 
 namespace spd::ui {
 	// pass arg to setter by val
@@ -17,6 +17,7 @@ namespace spd::ui {
 	struct Style {
 		// layout
 		ADD_FIELD(float, spacing, SetSpacing);
+		ADD_FIELD(Alignment, alignment, SetAlignment);
 		ADD_FIELD_REF(Offsets, padding, SetPadding);
 		ADD_FIELD_REF(Offsets, margin, SetMargin);
 

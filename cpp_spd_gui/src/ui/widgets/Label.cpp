@@ -6,7 +6,7 @@ namespace spd::ui {
 	Label::Label(const std::string& text, const char* tag) : m_text(text), m_tag(tag) {}
 
 	void Label::OnRender() {
-        ImGui::SetCursorPos(GetContentPosition());
+        ImGui::SetCursorPos(m_boxModel.CalcContentPosition(m_position));
         ImGui::TextUnformatted(m_text.c_str());
 	}
 

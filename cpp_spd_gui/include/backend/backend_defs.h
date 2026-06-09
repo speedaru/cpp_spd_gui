@@ -4,7 +4,7 @@
 #define _AMD_
 #define NOMINMAX
 #include <minwindef.h>
-#include "types.h"
+#include <backend/types.h>
 
 namespace spd::backend {
 	struct DxDevice {

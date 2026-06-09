@@ -14,9 +14,13 @@ int main(int argc, char** argv) {
 	};
 	spd::core::Application app(L"my test app", 800, 600, nullptr, config);
 
-	auto label1 = std::make_unique<spd::ui::Label>("nigga");
-	app.SetRoot(spd::ui::MakeVBox(std::move(label1)));
+	auto root = spd::ui::MakeVBox(
+		spd::ui::MakeLabel("nigga"),
+		spd::ui::MakeLabel("nigga2")
+	);
+	root->SetSpacing(8.f)->SetPadding({ 4.f, 24.f });
 
+	app.SetRoot(std::move(root));
 	app.Run();
 
 	logging::LoggerShutdown();

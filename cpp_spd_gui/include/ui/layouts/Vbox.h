@@ -8,7 +8,7 @@ namespace spd::ui {
         ~Vbox() = default;
 
         // Core overrides
-        void Update() override {}
+        void Update() override;
         void Render() override;
         ImVec2 CalcSize() override;
 
@@ -17,8 +17,9 @@ namespace spd::ui {
         Vbox* SetPadding(const ImVec2& padding) { m_padding = padding; return this; }
 
     private:
-        float m_spacing = 8.0f; // Default gap between elements
-        ImVec2 m_padding = { 0.0f, 0.0f }; // Internal padding inside the box
+        float m_spacing{}; // default gap between elements
+        ImVec2 m_padding{}; // internal padding inside the box
+        ImVec2 m_margin{}; // internal padding inside the box
 	};
 
     template <typename... Widgets>

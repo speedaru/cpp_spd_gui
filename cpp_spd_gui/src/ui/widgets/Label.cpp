@@ -3,18 +3,22 @@
 
 namespace spd::ui {
 	Label::Label(const std::string& text) : m_text(text) {
+	}
+
+	void Label::Update() {
 		CalcSize();
 	}
 
 	void Label::Render() {
+		ImGui::SetCursorPos(m_position);
+
 		//ImGui::Text(m_text.c_str());
         ImGui::SetCursorPos(m_position);
         ImGui::TextUnformatted(m_text.c_str());
 	}
 
 	ImVec2 Label::CalcSize() {
-		//m_size = ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
-		m_size = { 100.f, 12.f };
+		m_size = ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
 		return m_size;
 	}
 

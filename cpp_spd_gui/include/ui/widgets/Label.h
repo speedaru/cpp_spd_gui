@@ -2,13 +2,13 @@
 #include <ui/Widget.h>
 
 namespace spd::ui {
-	class Label : public Widget {
+    class Label : public Widget {
     public:
-		Label(const std::string& text);
+        Label(const std::string& text);
 
-        // Required overrides
-        void Update() override {}
+        void Update() override;
         void Render() override;
+
         ImVec2 CalcSize() override;
 
         // Setters/Getters
@@ -17,5 +17,10 @@ namespace spd::ui {
 
     private:
         std::string m_text;
-	};
+    };
+
+    template <typename... Args>
+    std::unique_ptr<Label> MakeLabel(Args&&... args) {
+        return std::make_unique<Label>(std::move(args)...);
+    }
 }

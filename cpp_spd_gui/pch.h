@@ -13,6 +13,11 @@
 #include <string>
 #include <unordered_map>
 
+// Windows API
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
 // imgui
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui/imgui.h>
@@ -21,10 +26,5 @@
 #include <d3d11.h>
 #include <imgui/imgui_impl_win32.h>
 #include <imgui/imgui_impl_dx11.h>
-
-// Windows API
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 
 #include <utils/logger.h>

@@ -1,5 +1,7 @@
 #pragma once
-#include "pch.h"
+#include <memory>
+#include <string>
+#include <imgui/imgui.h>
 
 namespace spd::ui {
 	class Widget {

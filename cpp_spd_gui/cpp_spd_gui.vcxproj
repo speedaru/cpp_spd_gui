@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)build\intermediate\$(Configuration)_$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)vendor\;;$(ProjectDir)</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\;$(ProjectDir)vendor\;$(ProjectDir)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)lib\;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\backend\render.cpp" />
+    <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\ui\Container.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -160,6 +161,7 @@
     </ClCompile>
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\utils\screen.cpp" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_impl_dx11.cpp" />
@@ -170,8 +172,11 @@
   <ItemGroup>
     <ClInclude Include="include\backend\backend_defs.h" />
     <ClInclude Include="include\backend\render.h" />
+    <ClInclude Include="include\backend\types.h" />
+    <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\ui\Container.h" />
     <ClInclude Include="include\ui\Widget.h" />
+    <ClInclude Include="include\utils\screen.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="include\utils\logger.h" />
     <ClInclude Include="vendor\imgui\imconfig.h" />

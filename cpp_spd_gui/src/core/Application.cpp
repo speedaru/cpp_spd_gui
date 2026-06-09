@@ -171,9 +171,12 @@ namespace spd::core {
             ImGuiWindowFlags_NoMove);
 
 		if (m_root) {
+			float titlebarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+
+			m_root->SetSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
+			m_root->SetPosition(ImVec2(0, titlebarHeight)); // set root pos after title bar
+
 			m_root->Update();
-			m_root->SetSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height)));
-			m_root->SetPosition(ImVec2(0, 0));
 			m_root->Render();
 		}
 

@@ -3,24 +3,20 @@
 
 namespace spd::ui {
 	void Container::Update() {
+		// update children before calculating own size
 		for (const auto& child : m_children) {
 			child->Update();
 		}
-	}
 
-	void Container::Render() {
-		for (const auto& child : m_children) {
-			child->Render();
-		}
-	}
-
-	void Container::AddChild(Child&& child) {
-		if (child) {
-			m_children.push_back(std::move(child));
-		}
+		// calculate own size
+		Widget::Update();
 	}
 
 	void Container::Clear() {
 		m_children.clear();
+	}
+
+	const size_t Container::GetChildCount() const {
+		return m_children.size();
 	}
 }

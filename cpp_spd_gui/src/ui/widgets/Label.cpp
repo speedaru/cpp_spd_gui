@@ -2,32 +2,24 @@
 #include <ui/widgets/Label.h>
 
 namespace spd::ui {
-	Label::Label(const std::string& text) : m_text(text) {
-	}
+	Label::Label(const std::string& text) : m_text(text) {}
+	Label::Label(const std::string& text, const char* tag) : m_text(text), m_tag(tag) {}
 
-	void Label::Update() {
-		CalcSize();
-	}
-
-	void Label::Render() {
-		ImGui::SetCursorPos(m_position);
-
-		//ImGui::Text(m_text.c_str());
-        ImGui::SetCursorPos(m_position);
+	void Label::OnRender() {
+        ImGui::SetCursorPos(GetContentPosition());
         ImGui::TextUnformatted(m_text.c_str());
 	}
 
-	ImVec2 Label::CalcSize() {
-		m_size = ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
-		return m_size;
-	}
-
-	void Label::SetText(const std::string& text) {
-		m_text = text;
-		CalcSize();
+	ImVec2 Label::OnCalcSize() {
+		ImVec2 size = ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
+		return size;
 	}
 
 	std::string Label::GetText() const {
 		return m_text;
+	}
+
+	void Label::SetText(const std::string& text) {
+		m_text = text;
 	}
 }

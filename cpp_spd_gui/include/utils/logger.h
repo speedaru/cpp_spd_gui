@@ -114,10 +114,8 @@ namespace logging {
 
 	// should always add at the end to not mess up access modifiers
 	#define ADD_CLASS_TAG				\
-	protected:							\
 		const char* m_tag = "Unnamed";	\
-	public:								\
-		void SetTag(const char* tag) { m_tag = tag; }
+		virtual void SetTag(const char* tag) { m_tag = tag; }
 }
 
 

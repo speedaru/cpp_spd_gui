@@ -16,10 +16,12 @@ const char* logging::GetLogLevelName(LogLevel level) {
 }
 
 void logging::LoggerInit(const char* filename, LogLevel allowedLevels) {
-    logFile = std::ofstream(filename, std::ios::binary);
-    if (!logFile) {
-        fprintf(stderr, "failed to open file '%s'\n", filename);
-        return;
+    if (filename) {
+		logFile = std::ofstream(filename, std::ios::binary);
+		if (!logFile) {
+			fprintf(stderr, "failed to open file '%s'\n", filename);
+			return;
+		}
     }
     g_logLevels = allowedLevels;
 }

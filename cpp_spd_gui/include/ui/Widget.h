@@ -12,7 +12,7 @@ namespace spd::ui {
 		virtual void Update() = 0;
 		virtual void Render() = 0;
 
-		virtual ImVec2 CalSize() = 0;
+		virtual ImVec2 CalcSize() = 0;
 
 		// getters and setters
 		inline ImVec2 GetPosition() const { return m_position; }

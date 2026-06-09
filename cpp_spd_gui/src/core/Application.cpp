@@ -51,7 +51,10 @@ namespace spd::core {
 
         // setup window data
         m_backend->windowData.className = title.c_str();
-        m_backend->windowData.menuName = title.c_str();
+        // manually copy wchar title into menu name array
+        for (size_t i{}; i < title.length() && i < sizeof(WindowData::menuName); i++) {
+            m_backend->windowData.menuName[i] = (char)title[i];
+        }
         m_backend->windowData.size = { width, height };
         vec2 screenSize = utils::GetScreenSize();
         m_backend->windowData.startPos = { screenSize.x / 2 - width / 2, screenSize.y / 2 - height / 2 };
@@ -158,12 +161,23 @@ namespace spd::core {
     }
 
     void Application::Render() {
+        WindowData& windowData = m_backend->windowData;
+        ImGui::SetNextWindowPos({ 0.f, 0.f });
+        ImGui::SetNextWindowSize({ (float)windowData.size.x, (float)windowData.size.y });
+        ImGui::Begin(windowData.menuName, &m_isRunning,
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoSavedSettings |
+            ImGuiWindowFlags_NoCollapse |
+            ImGuiWindowFlags_NoMove);
+
 		if (m_root) {
 			m_root->Update();
 			m_root->SetSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height)));
 			m_root->SetPosition(ImVec2(0, 0));
 			m_root->Render();
 		}
+
+        ImGui::End();
 
 		ImGui::Render();
     }

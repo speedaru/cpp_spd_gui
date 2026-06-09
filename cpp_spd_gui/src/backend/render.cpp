@@ -49,7 +49,7 @@ namespace spd::backend {
 		wc.hInstance = GetModuleHandle(nullptr);
 		wc.hCursor = nullptr;
 		wc.hbrBackground = nullptr;
-		wc.lpszMenuName = windowData.menuName;
+		wc.lpszMenuName = windowData.className;
 		wc.lpszClassName = windowData.className;
 		wc.hIcon = nullptr;
 

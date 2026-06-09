@@ -2,6 +2,7 @@
 #include <imgui/imgui.h>
 #include <d3d11.h>
 #define _AMD_
+#define NOMINMAX
 #include <minwindef.h>
 #include "types.h"
 
@@ -21,7 +22,7 @@ namespace spd::backend {
 
 	struct WindowData {
 		// stuff to specify
-		LPCWSTR menuName;
+		char menuName[64]{ 0 };
 		LPCWSTR className;
 		DWORD styles{};
 		DWORD extendedStyles{};

@@ -25,6 +25,6 @@ namespace spd::ui {
 
     template <typename... Args>
     std::unique_ptr<Label> MakeLabel(Args&&... args) {
-        return std::make_unique<Label>(std::move(args)...);
+        return std::make_unique<Label>(std::forward<Args>(args)...);
     }
 }

@@ -23,6 +23,6 @@ namespace spd::ui {
 
     template <typename... Args>
     std::unique_ptr<Button> MakeButton(Args&&... args) {
-        return std::make_unique<Button>(std::move(args)...);
+        return std::make_unique<Button>(std::forward<Args>(args)...);
     }
 }

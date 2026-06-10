@@ -57,9 +57,6 @@
     <ClCompile Include="src\ui\widgets\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\layouts\Vbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,13 +66,19 @@
     <ClCompile Include="src\ui\BoxModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\layouts\Hbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ui\widgets\TextBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\layouts\Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widgets\Spacer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widgets\NavBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,9 +137,6 @@
     <ClInclude Include="include\ui\widgets\Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\layouts\Vbox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\Style.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -149,13 +149,19 @@
     <ClInclude Include="include\ui\BoxModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\layouts\Hbox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\ui\widgets\TextBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\layouts\Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\widgets\Spacer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\widgets\NavBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

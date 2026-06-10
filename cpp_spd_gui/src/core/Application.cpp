@@ -16,7 +16,7 @@ namespace spd::core {
         if (!app || !app->IsRunning())
             return ::DefWindowProcW(hwnd, msg, wParam, lParam);
 
-        float titleBarHeight = Application::GetTitleBarHeight();
+        float titleBarHeight = app->GetTitleBarHeight();
         auto* pBackend = reinterpret_cast<BackendData*>(app->GetBackend());
 
         switch (msg) {
@@ -54,6 +54,7 @@ namespace spd::core {
 	Application::Application(const std::wstring& title, int width, int height, DxDevice* sharedDevice, const AppConfig& config)
         : m_isRunning(true), m_width(width), m_height(height), m_ownsDevice(false) {
         
+        m_config = config;
         m_backend = std::make_unique<BackendData>();
         SetupSharedDevice(sharedDevice);
 
@@ -106,11 +107,18 @@ namespace spd::core {
         }
     }
 
+    void Application::Minimize() {
+        ::ShowWindow(m_backend->windowData.hwnd, SW_MINIMIZE);
+    }
+
     void Application::Close() {
         m_isRunning = false;
     }
 
     float Application::GetTitleBarHeight() {
+        if (m_config.useCustomTitleBar) {
+            return m_config.customTitleBarHeight;
+        }
 		return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
     }
 
@@ -184,24 +192,42 @@ namespace spd::core {
         WindowData& windowData = m_backend->windowData;
         ImGui::SetNextWindowPos({ 0.f, 0.f });
         ImGui::SetNextWindowSize({ (float)windowData.size.x, (float)windowData.size.y });
-        ImGui::Begin(windowData.menuName, &m_isRunning,
-            ImGuiWindowFlags_NoResize |
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoSavedSettings |
             ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoMove);
+            ImGuiWindowFlags_NoMove;
+
+        if (m_config.useCustomTitleBar) {
+            flags |= ImGuiWindowFlags_NoTitleBar;
+        }
+
+        bool* pOpen = m_config.useCustomTitleBar ? nullptr : &m_isRunning;
+        ImGui::Begin(windowData.menuName, pOpen, flags);
 
 		if (m_root) {
             float titlebarHeight = Application::GetTitleBarHeight();
-
-            m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
-            m_root->SetPosition(ImVec2(0, titlebarHeight)); // set root pos after title bar
+            
+            // if we use a custom title bar, the root takes up the full window
+            // the custom title bar will just be the first hbox inside the root
+            if (m_config.useCustomTitleBar) {
+                m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height)));
+                m_root->SetPosition(ImVec2(0, 0));
+            }
+            else {
+                m_root->SetBaseSize(ImVec2(static_cast<float>(m_width), static_cast<float>(m_height - titlebarHeight)));
+                m_root->SetPosition(ImVec2(0, titlebarHeight));
+            }
 
 			m_root->Update();
 			m_root->Render();
 		}
 
         ImGui::End();
-
+        ImGui::PopStyleVar(2);
 		ImGui::Render();
     }
 

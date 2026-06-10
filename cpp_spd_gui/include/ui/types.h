@@ -30,8 +30,9 @@ namespace spd::ui {
 	};
 
 	struct Offsets {
-		Offsets(float top, float right, float bottom, float left) : top(top), right(right), bottom(bottom), left(left) {}
 		Offsets(float off) : top(off), right(off), bottom(off), left(off) {}
+		Offsets(float x, float y) : top(y), right(x), bottom(y), left(x) {}
+		Offsets(float top, float right, float bottom, float left) : top(top), right(right), bottom(bottom), left(left) {}
 
 		float top;
 		float right;

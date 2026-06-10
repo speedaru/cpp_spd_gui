@@ -8,7 +8,7 @@ namespace spd::ui {
 	}
 
     void Button::OnRender() {
-        ImVec2 borderPos = m_boxModel.CalcBorderPosition(m_position);
+        ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
         ImGui::SetCursorPos(borderPos);

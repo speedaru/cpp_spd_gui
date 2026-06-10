@@ -34,7 +34,7 @@ namespace spd::ui {
 		};
 	}
 
-	ImVec2 BoxModel::CalcBorderPosition(ImVec2 position) const {
+	ImVec2 BoxModel::CalcBoxPosition(ImVec2 position) const {
 		Offsets margin = this->margin->value_or(Offsets::ZERO);
 		return { position.x + margin.left, position.y + margin.top };
 	}

@@ -24,6 +24,12 @@ namespace spd::ui {
 		ADD_FIELD(bool, vgrow, SetVgrow);
 
 		// visuals
+
+		// containers
+		ADD_FIELD_REF(Color, frameBgColor, SetFrameBgColor);
+		ADD_FIELD(float, frameRounding, SetFrameRounding);
+
+		// buttons and widgets
 		ADD_FIELD_REF(Color, bgColor, SetBgColor);
 		ADD_FIELD_REF(Color, borderColor, SetBorderColor);
 		ADD_FIELD(float, rounding, SetRounding);

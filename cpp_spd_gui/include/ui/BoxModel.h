@@ -27,7 +27,7 @@ namespace spd::ui {
         ImVec2 CalcContentPosition(ImVec2 position) const;
 
 		// get position of border (position + margin)
-        ImVec2 CalcBorderPosition(ImVec2 position) const;
+        ImVec2 CalcBoxPosition(ImVec2 position) const;
 
 		float CalcPositionX(const BoxModel& other, Alignment align) const;
 		float CalcPositionY(const BoxModel& other, Alignment align) const;

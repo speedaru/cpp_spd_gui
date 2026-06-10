@@ -27,7 +27,7 @@ namespace spd::ui {
     }
 
     void TextBox::OnRender() {
-        ImVec2 borderPos = m_boxModel.CalcBorderPosition(m_position);
+        ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
         bool isHovered = ImGui::IsMouseHoveringRect(borderPos, { borderPos.x + boxSize.x, borderPos.y + boxSize.y });

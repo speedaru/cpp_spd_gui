@@ -5,12 +5,13 @@
 #include <utils/logger.h>
 #include "QuicksandSemiBold.hpp"
 
-#include <ui/layouts/Vbox.h>
-#include <ui/layouts/Hbox.h>
+#include <ui/layouts/Box.h>
 
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
 #include <ui/widgets/TextBox.h>
+#include <ui/widgets/Spacer.h>
+#include <ui/widgets/NavBar.h>
 
 namespace assets {
     spd::core::Font quicksand;
@@ -24,7 +25,7 @@ static void SetupFonts(ImGuiIO& io) {
 	);
 }
 
-std::unique_ptr<spd::ui::Container> Test() {
+std::unique_ptr<spd::ui::Container> Test(spd::core::Application& app) {
 	auto root = spd::ui::MakeVbox();
 	root->SetTag("root");
 	root->m_style
@@ -109,25 +110,47 @@ std::unique_ptr<spd::ui::Container> Test() {
 	return std::move(root);
 }
 
-std::unique_ptr<spd::ui::Container> LoginForm() {
+std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 	auto root = spd::ui::MakeVbox();
 	root->SetTag("root");
 	root->m_style
+		.SetAlignment(spd::ui::Alignment::Top)
 		.SetFont(assets::quicksand.Get(18.f))
-		.SetAlignment(spd::ui::Alignment::Center);
+		.SetBorderColor({ 0, 255, 0, 255 })
+		.SetBorderSize(1.f);
 
-	auto vbox = root->Add(spd::ui::MakeVbox());
-	vbox->SetBaseSize({ 250, 0.f });
+	auto nav = root->Add(spd::ui::MakeNavBar());
+	nav->m_style
+		.SetFrameBgColor({ 255, 155, 105, 105 })
+		.SetBgColor({ 255, 155, 105, 155 })
+		.SetHoverColor({ 255, 155, 105, 205 })
+		.SetActiveColor({ 255, 155, 105, 255 });
+	nav->AddTitle("FasterPeak Hub");
+	
+	nav->SetNavButtonSize({ 20.f, 0.f });
+	nav->AddMinButton([&app]() { app.Minimize(); });
+	nav->AddCloseButton([&app]() { app.Close(); });
+
+	auto mainVbox = root->Add(spd::ui::MakeVbox());
+	mainVbox->m_style
+		.SetVgrow(true)
+		.SetHgrow(true)
+		.SetBorderColor({ 255, 155, 105, 155 })
+		.SetBorderSize(1.f);
+
+	auto vbox = mainVbox->Add(spd::ui::MakeVbox());
+	vbox->SetBaseSize({ 250.f, 0.f });
 	vbox->m_style
+		.SetAlignment(spd::ui::Alignment::Center)
 		.SetMargin({ 0.f, 0.f, 80.f, 0.f })
 		.SetSpacing(12.f)
-		.SetBorderColor({ 255, 255, 0, 55 })
-		.SetBorderSize(0.f);
+		.SetBorderColor({ 255, 0, 255, 155 })
+		.SetBorderSize(1.f);
 
 	// Title
 	vbox->Add(spd::ui::MakeLabel("FasterPeak Loader"))
 		->m_style
-			.SetFont(assets::quicksand.Get(32.f))
+			.SetFont(assets::quicksand.Get(24.f))
 			.SetPadding({ 0.f, 0.f, 20.f, 0.f });
 
 	// The input field
@@ -166,7 +189,7 @@ int main(int argc, char** argv) {
 	};
 	spd::core::Application app(L"my test app", 800, 600, nullptr, config);
 
-	auto root = std::move(LoginForm());
+	auto root = std::move(LoginForm(app));
 
 	app.SetRoot(std::move(root));
 	app.Run();

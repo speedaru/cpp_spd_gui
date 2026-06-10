@@ -35,6 +35,8 @@ namespace spd::ui {
 		// calc content size
         virtual ImVec2 OnCalcSize() = 0;
 
+		virtual void RenderBackground();
+
         void RenderBorder();
         void GenerateID();
 

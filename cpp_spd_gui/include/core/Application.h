@@ -13,6 +13,8 @@ namespace spd::core {
 	struct AppConfig {
 		bool borderless = false;
 		bool noImGuiIni = false;
+		bool useCustomTitleBar = true;
+		float customTitleBarHeight = 35.0f;
 		FontSetupCallback fontCallback = nullptr;
 	};
 
@@ -23,10 +25,12 @@ namespace spd::core {
 		~Application();
 
 		void SetRoot(std::unique_ptr<ui::Container> rootWidget);
+
 		void Run();
+		void Minimize();
 		void Close();
 
-		static float GetTitleBarHeight();
+		float GetTitleBarHeight();
 
 		// retrieve device to make a second window
 		spd::backend::DxDevice* GetDevice() const;
@@ -53,6 +57,7 @@ namespace spd::core {
 	private:
 		std::unique_ptr<ui::Container> m_root;
 
+		AppConfig m_config;
 		bool m_isRunning;
 		int m_width;
 		int m_height;

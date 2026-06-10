@@ -21,6 +21,7 @@ namespace spd::ui {
 		inline Widget* SetParent(Widget* parent) { m_parent = parent; return this; }
 		inline Widget* SetPosition(const ImVec2 newPos) { m_position = newPos; return this; }
 
+		inline ImVec2 GetBaseSize() const { return m_baseSize; }
 		inline ImVec2 GetContentSize() const { return m_boxModel.contentSize; }
 		inline ImVec2 GetBoxSize() const { return m_boxModel.boxSize; }
 		inline ImVec2 GetTotalSize() const { return m_boxModel.totalSize; }

@@ -58,22 +58,25 @@ std::unique_ptr<spd::ui::Container> Test() {
 
 	auto hbox1 = vbox1->Add(spd::ui::MakeHbox());
 	hbox1->SetTag("hbox1");
+	hbox1->SetBaseSize({ 0.f, 70.f });
 	hbox1->m_style
 		.SetPadding({ 0.f })
 		.SetSpacing(8.f)
 		.SetBorderColor({ 255, 0, 0, 205 })
 		.SetBorderSize(1.f);
 
-	hbox1->Add(spd::ui::MakeLabel("click me: "))
+	hbox1->Add(spd::ui::MakeLabel("click me:", "click me"))
 		->m_style
+			.SetAlignment(spd::ui::Alignment::Top)
 			.SetBorderColor({ 0, 255, 255, 205 })
 			.SetBorderSize(1.f);
 
 	hbox1->Add(spd::ui::MakeButton("button1", "button1"))
 		->OnClick([] { LOG_D("clicked button\n"); })
 		->m_style
-			.SetPadding(8.f)
+			.SetPadding(6.f)
 			.SetRounding(4.f)
+			.SetVgrow(true)
 			.SetBorderColor({ 255, 255, 0, 155 })
 			.SetBorderSize(1.f);
 
@@ -96,38 +99,45 @@ std::unique_ptr<spd::ui::Container> LoginForm() {
 	auto root = spd::ui::MakeVbox();
 	root->SetTag("root");
 	root->m_style
-		.SetPadding({ 0.f, 0.f, 100.f, 0.f })
-		.SetAlignment(spd::ui::Alignment::Center)
-		.SetSpacing(12.f);
+		.SetAlignment(spd::ui::Alignment::Center);
+
+	auto vbox = root->Add(spd::ui::MakeVbox());
+	vbox->SetBaseSize({ 250, 0.f });
+	vbox->m_style
+		.SetMargin({ 0.f, 0.f, 80.f, 0.f })
+		.SetSpacing(12.f)
+		.SetBorderColor({ 255, 255, 0, 55 })
+		.SetBorderSize(0.f);
 
 	// Title
-	root->Add(spd::ui::MakeLabel("FasterPeak Loader"))
-		->m_style.SetPadding({ 0.f, 0.f, 20.f, 0.f }); // Add bottom padding to push input down
+	vbox->Add(spd::ui::MakeLabel("FasterPeak Loader"))
+		->m_style
+			.SetPadding({ 0.f, 0.f, 20.f, 0.f });
 
 	// The input field
-	auto licenseBox = root->Add(spd::ui::MakeTextBox("Enter License..."));
-	licenseBox->SetBaseSize({ 250.f, 0.f }); // Force width to 250px
+	auto licenseBox = vbox->Add(spd::ui::MakeTextBox("Enter License..."));
 	licenseBox->m_style
 		.SetPadding({ 8.f })
 		.SetBgColor({ 25, 25, 25, 255 })
 		.SetHoverColor({ 35, 35, 35, 255 })
 		.SetActiveColor({ 45, 45, 45, 255 })
 		.SetRounding(4.f)
+		.SetHgrow(true)
 		.SetBorderColor({ 100, 100, 100, 255 })
 		.SetBorderSize(1.f);
 
 	// The Login Button
-	root->Add(spd::ui::MakeButton("Login", "btn_login"))
+	vbox->Add(spd::ui::MakeButton("Login", "btn_login"))
 		->OnClick([licenseBox]() {
 			std::string key = licenseBox->GetText();
 			LOG_D("Attempting login with key: %s\n", key.c_str());
 		})
-		->SetBaseSize({ 250.f, 0.f }) // Match the width of the textbox
 		->m_style
 		.SetPadding({ 8.f })
 		.SetBgColor({ 0, 120, 215, 255 }) // Windows blue
 		.SetHoverColor({ 0, 140, 235, 255 })
-		.SetRounding(4.f);
+		.SetRounding(4.f)
+		.SetHgrow(true);
 
 	return std::move(root);
 }

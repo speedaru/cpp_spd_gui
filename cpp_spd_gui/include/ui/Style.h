@@ -17,9 +17,11 @@ namespace spd::ui {
 	struct Style {
 		// layout
 		ADD_FIELD(float, spacing, SetSpacing);
-		ADD_FIELD(Alignment, alignment, SetAlignment);
 		ADD_FIELD_REF(Offsets, padding, SetPadding);
 		ADD_FIELD_REF(Offsets, margin, SetMargin);
+		ADD_FIELD(Alignment, alignment, SetAlignment);
+		ADD_FIELD(bool, hgrow, SetHgrow);
+		ADD_FIELD(bool, vgrow, SetVgrow);
 
 		// visuals
 		ADD_FIELD_REF(Color, bgColor, SetBgColor);

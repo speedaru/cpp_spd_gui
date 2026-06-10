@@ -2,6 +2,13 @@
 #include <ui/layouts/Hbox.h>
 
 namespace spd::ui {
+    void Hbox::Update() {
+        Container::Update();
+
+        // hgrow
+        CalculateFlex();
+    }
+
     void Hbox::OnRender() {
         // styles
         float spacing = m_style.spacing.value_or(0.f);
@@ -40,5 +47,34 @@ namespace spd::ui {
 		}
 
         return calculatedSize;
+    }
+
+    void Hbox::CalculateFlex() {
+        bool updated = false;
+
+        // get available internal height from the box model
+        float availableHeight = m_boxModel.GetContentAreaSize().y; 
+
+        for (const auto& child : m_children) {
+            if (!child->m_style.vgrow.value_or(false)) {
+                continue;
+            }
+
+			Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
+			
+			// the child's target height is the available space minus its own margins
+			float targetHeight = availableHeight - childMargin.Height();
+
+			// only grow if the child width is smaller than target width
+			if (targetHeight > child->GetBoxSize().y) {
+				child->SetBaseSize({ child->GetBaseSize().x, targetHeight });
+				child->Update(); // recalculate child's box model
+                updated = true;
+			}
+        }
+
+        if (updated) {
+            Widget::Update();
+        }
     }
 }

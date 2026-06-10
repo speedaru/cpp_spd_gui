@@ -10,6 +10,11 @@ namespace spd::ui {
 
         Vbox(const char* tag = DEFAULT_TAG) : m_tag(tag) {}
 
+        void Update() override;
+
+    private:
+        void CalculateFlex();
+
 	protected:
         void OnRender() override;
         ImVec2 OnCalcSize() override;

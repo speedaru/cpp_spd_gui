@@ -2,6 +2,13 @@
 #include <ui/layouts/Vbox.h>
 
 namespace spd::ui {
+    void Vbox::Update() {
+        Container::Update();
+
+        // hgrow
+        CalculateFlex();
+    }
+
     void Vbox::OnRender() {
         // styles
         float spacing = m_style.spacing.value_or(0.f);
@@ -40,5 +47,34 @@ namespace spd::ui {
 		}
 
         return calculatedSize;
+    }
+
+    void Vbox::CalculateFlex() {
+        bool updated = false;
+
+        // get available internal width from the box model
+        float availableWidth = m_boxModel.GetContentAreaSize().x; 
+
+        for (const auto& child : m_children) {
+            if (!child->m_style.hgrow.value_or(false)) {
+                continue;
+            }
+
+			Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
+			
+			// the child's target width is the available space minus its own margins
+			float targetWidth = availableWidth - childMargin.Width();
+
+			// only grow if the child width is smaller than target width
+			if (targetWidth > child->GetBoxSize().x) {
+				child->SetBaseSize({ targetWidth, child->GetBaseSize().y });
+				child->Update(); // recalculate child's box model
+                updated = true;
+			}
+        }
+
+        if (updated) {
+            Widget::Update();
+        }
     }
 }

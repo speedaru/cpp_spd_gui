@@ -143,15 +143,21 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 	vbox->m_style
 		.SetAlignment(spd::ui::Alignment::Center)
 		.SetMargin({ 0.f, 0.f, 80.f, 0.f })
-		.SetSpacing(12.f)
 		.SetBorderColor({ 255, 0, 255, 155 })
-		.SetBorderSize(1.f);
+		.SetBorderSize(0.f);
 
 	// Title
 	vbox->Add(spd::ui::MakeLabel("FasterPeak Loader"))
 		->m_style
 			.SetFont(assets::quicksand.Get(24.f))
 			.SetPadding({ 0.f, 0.f, 20.f, 0.f });
+
+	vbox->Add(spd::ui::MakeLabel("License :"))
+		->m_style
+		.SetPadding({ 4.f })
+		.SetFont(assets::quicksand.Get(18.f))
+		.SetAlignment(spd::ui::Alignment::Left)
+		.SetTextColor({ 255, 255, 255, 200 }); // Subtle grey title text
 
 	// The input field
 	auto licenseBox = vbox->Add(spd::ui::MakeTextBox("Enter License..."));
@@ -165,16 +171,37 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 		.SetBorderColor({ 100, 100, 100, 255 })
 		.SetBorderSize(1.f);
 
+	auto statusLabel = spd::ui::MakeLabel("");
+	auto statusLabelPtr = statusLabel.get();
+	statusLabel->m_style
+		.SetPadding({ 6.f })
+		.SetFont(assets::quicksand.Get(14.f));
+
 	// The Login Button
 	vbox->Add(spd::ui::MakeButton("Login", "btn_login"))
-		->OnClick([licenseBox]() {
+		->OnClick([licenseBox, statusLabelPtr]() {
 			std::string key = licenseBox->GetText();
-			LOG_D("Attempting login with key: %s\n", key.c_str());
+
+			if (key.empty()) {
+				statusLabelPtr->SetText("Error: License cannot be blank!");
+				statusLabelPtr->m_style.SetTextColor({ 255, 50, 50, 255 }); // Error Red
+			}
+			else if (key == "valid-key-123") {
+				statusLabelPtr->SetText("Valid License");
+				statusLabelPtr->m_style.SetTextColor({ 50, 255, 50, 255 }); // Success Green
+			}
+			else {
+				statusLabelPtr->SetText("Invalid or Expired Serial Key");
+				statusLabelPtr->m_style.SetTextColor({ 255, 50, 50, 255 });
+			}
 		})
 		->m_style
+		.SetMargin({ 0.f, 8.f })
 		.SetPadding({ 8.f })
 		.SetRounding(4.f)
 		.SetHgrow(true);
+
+	vbox->Add(std::move(statusLabel));
 
 	return std::move(root);
 }

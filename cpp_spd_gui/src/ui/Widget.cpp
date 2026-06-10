@@ -40,7 +40,7 @@ namespace spd::ui {
         ImDrawList* draw = ImGui::GetWindowDrawList();
         Color borderColor = m_style.borderColor.value();
         float borderSize = m_style.borderSize.value();
-        float rounding = m_style.rounding.value_or(0.f);
+        float rounding = ResolveStyle(&Style::rounding, 0.f);
 
         ImVec2 pos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;

@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include <ui/widgets/NavBar.h>
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
@@ -44,7 +44,7 @@ namespace spd::ui {
             return this;
         }
 
-        auto minButton = MakeButton("-");
+        auto minButton = MakeButton("-", "min");
         minButton->OnClick(minCallback)->SetBaseSize(m_navButtonSize);
 
         m_minButton = minButton.get();
@@ -57,7 +57,7 @@ namespace spd::ui {
             return this;
         }
         
-        auto closeButton = MakeButton("X");
+        auto closeButton = MakeButton("X", "close");
         closeButton->OnClick(closeCallback)->SetBaseSize(m_navButtonSize);
 
         m_closeButton = closeButton.get();

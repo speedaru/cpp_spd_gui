@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="src\backend\render.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
+    <ClCompile Include="src\core\Font.cpp" />
     <ClCompile Include="src\ui\BoxModel.cpp" />
     <ClCompile Include="src\ui\Container.cpp" />
     <ClCompile Include="pch.cpp">
@@ -183,6 +184,7 @@
     <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\ui\BoxModel.h" />
     <ClInclude Include="include\ui\Container.h" />
+    <ClInclude Include="include\core\Font.h" />
     <ClInclude Include="include\ui\layouts\Hbox.h" />
     <ClInclude Include="include\ui\layouts\Vbox.h" />
     <ClInclude Include="include\ui\Style.h" />

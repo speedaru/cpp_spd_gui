@@ -155,8 +155,12 @@ namespace spd::core {
 
     void Application::SetupImGui(const AppConfig& config) {
         ImGuiIO& io = ImGui::GetIO();
+
         if (config.noImGuiIni) {
             io.IniFilename = nullptr;
+        }
+        if (config.fontCallback) {
+            config.fontCallback(io);
         }
     }
 

@@ -1,7 +1,9 @@
 #include <string>
 #include <memory>
 #include <core/Application.h>
+#include <core/Font.h>
 #include <utils/logger.h>
+#include "QuicksandSemiBold.hpp"
 
 #include <ui/layouts/Vbox.h>
 #include <ui/layouts/Hbox.h>
@@ -9,6 +11,18 @@
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
 #include <ui/widgets/TextBox.h>
+
+namespace assets {
+    spd::core::Font quicksand;
+    spd::core::Font firaCode;
+}
+
+static void SetupFonts(ImGuiIO& io) {
+	assets::quicksand = spd::core::Font::LoadFromMemory(
+		QuicksandSemiBold, sizeof(QuicksandSemiBold),
+		{ 14.f, 16.f, 18.f, 24.f, 32.f }
+	);
+}
 
 std::unique_ptr<spd::ui::Container> Test() {
 	auto root = spd::ui::MakeVbox();
@@ -99,6 +113,7 @@ std::unique_ptr<spd::ui::Container> LoginForm() {
 	auto root = spd::ui::MakeVbox();
 	root->SetTag("root");
 	root->m_style
+		.SetFont(assets::quicksand.Get(18.f))
 		.SetAlignment(spd::ui::Alignment::Center);
 
 	auto vbox = root->Add(spd::ui::MakeVbox());
@@ -112,6 +127,7 @@ std::unique_ptr<spd::ui::Container> LoginForm() {
 	// Title
 	vbox->Add(spd::ui::MakeLabel("FasterPeak Loader"))
 		->m_style
+			.SetFont(assets::quicksand.Get(32.f))
 			.SetPadding({ 0.f, 0.f, 20.f, 0.f });
 
 	// The input field
@@ -134,8 +150,6 @@ std::unique_ptr<spd::ui::Container> LoginForm() {
 		})
 		->m_style
 		.SetPadding({ 8.f })
-		.SetBgColor({ 0, 120, 215, 255 }) // Windows blue
-		.SetHoverColor({ 0, 140, 235, 255 })
 		.SetRounding(4.f)
 		.SetHgrow(true);
 
@@ -148,6 +162,7 @@ int main(int argc, char** argv) {
 	spd::core::AppConfig config{
 		.borderless = true,
 		.noImGuiIni = true,
+		.fontCallback = SetupFonts
 	};
 	spd::core::Application app(L"my test app", 800, 600, nullptr, config);
 

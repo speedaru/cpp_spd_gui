@@ -25,10 +25,14 @@ namespace spd::ui {
 
 		// visuals
 		ADD_FIELD_REF(Color, bgColor, SetBgColor);
-		ADD_FIELD_REF(Color, textColor, SetTextColor);
 		ADD_FIELD_REF(Color, borderColor, SetBorderColor);
 		ADD_FIELD(float, rounding, SetRounding);
 		ADD_FIELD(float, borderSize, SetBorderSize);
+
+		// text
+		ADD_FIELD_REF(Color, textColor, SetTextColor);
+		ADD_FIELD_REF(float, textSize, SetTextSize);
+		ADD_FIELD(ImFont*, font, SetFont);
 
 		// interactive
 		ADD_FIELD_REF(Color, hoverColor, SetHoverColor);

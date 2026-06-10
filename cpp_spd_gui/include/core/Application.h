@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <ui/Container.h>
 
 namespace spd::backend {
@@ -7,9 +8,12 @@ namespace spd::backend {
 }
 
 namespace spd::core {
+	using FontSetupCallback = std::function<void(ImGuiIO&)>;
+
 	struct AppConfig {
 		bool borderless = false;
 		bool noImGuiIni = false;
+		FontSetupCallback fontCallback = nullptr;
 	};
 
 	class Application {
@@ -52,6 +56,6 @@ namespace spd::core {
 		bool m_isRunning;
 		int m_width;
 		int m_height;
-		bool m_ownsDevice; // Tracks memory ownership for cleanup
+		bool m_ownsDevice; // tracks memory ownership for cleanup
 	};
 }

@@ -3,16 +3,31 @@
 
 namespace spd::ui {
 	void Widget::Update() {
+		// resolve font from this widget or parents
+        ImFont* resolvedFont = ResolveStyle(&Style::font, (ImFont*)nullptr);
+
+		if (resolvedFont) ImGui::PushFont(resolvedFont);
+
+		// wrap size calculation with font block
+		ImVec2 contentSize = OnCalcSize();
+
+		if (resolvedFont) ImGui::PopFont();
+
 		// recalc box
-		m_boxModel.Recalculate(OnCalcSize(), m_baseSize);
+		m_boxModel.Recalculate(contentSize, m_baseSize);
 	}
 
 	void Widget::Render() {
 		// draw border for all widgets
 		RenderBorder();
 
+		ImFont* resolvedFont = ResolveStyle(&Style::font, (ImFont*)nullptr);
+		if (resolvedFont) ImGui::PushFont(resolvedFont);
+
 		// draw derived widget content
 		OnRender();
+
+		if (resolvedFont) ImGui::PopFont();
 	}
 
 	void Widget::RenderBorder() {

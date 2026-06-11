@@ -29,8 +29,8 @@ namespace spd::ui{
 		return res;
 	}
 
-	float CalcAlignmentX(float layoutWidth, float contentWidth, Alignment alignment) {
-		float halfX = layoutWidth / 2.f - contentWidth / 2.f;
+	float CalcAlignmentX(float containerWidth, float itemWidth, Alignment alignment) {
+		float halfX = containerWidth / 2.f - itemWidth / 2.f;
 
 		// by default equivalent to Alignment::Center
 		float x = halfX;
@@ -43,8 +43,8 @@ namespace spd::ui{
 		return x;
 	}
 
-	float CalcAlignmentY(float layoutHeight, float contentHeight, Alignment alignment) {
-		float halfY = layoutHeight / 2.f - contentHeight / 2.f;
+	float CalcAlignmentY(float containerHeight, float itemHeight, Alignment alignment) {
+		float halfY = containerHeight / 2.f - itemHeight / 2.f;
 
 		// by default equivalent to Alignment::Center
 		float y = halfY;
@@ -57,10 +57,10 @@ namespace spd::ui{
 		return y;
 	}
 
-	ImVec2 CalcAlignmentPos(ImVec2 layoutSize, ImVec2 contentSize, Alignment alignment) {
+	ImVec2 CalcAlignmentPos(ImVec2 containerSize, ImVec2 itemSize, Alignment alignment) {
 		return {
-			CalcAlignmentX(layoutSize.x, contentSize.x, alignment),
-			CalcAlignmentY(layoutSize.y, contentSize.y, alignment),
+			CalcAlignmentX(containerSize.x, itemSize.x, alignment),
+			CalcAlignmentY(containerSize.y, itemSize.y, alignment),
 		};
 	}
 }

@@ -2,7 +2,23 @@
 #include <ui/widgets/Button.h>
 
 namespace spd::ui {
-	Button* spd::ui::Button::OnClick(std::function<void()> callback) {
+    void Button::Update() {
+        Widget::Update();
+
+        // handle click
+		ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
+		ImVec2 boxSize = m_boxModel.boxSize;
+
+		// invisible imgui button for click detection
+		ImGui::SetCursorPos(borderPos);
+		bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
+
+		if (pressed) {
+			m_onClickCallback();
+		}
+    }
+
+    Button* spd::ui::Button::OnClick(std::function<void()> callback) {
 		m_onClickCallback = callback;
 		return this;
 	}
@@ -11,10 +27,9 @@ namespace spd::ui {
         ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
-        ImGui::SetCursorPos(borderPos);
-
-        // invisible imgui button for click detection
-        bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
+		// invisible imgui button for click detection
+		ImGui::SetCursorPos(borderPos);
+		bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
 
         // interaction state
         bool isHovered = ImGui::IsItemHovered();
@@ -60,11 +75,6 @@ namespace spd::ui {
         ImGui::TextUnformatted(m_text.c_str());
 
         if (textColor.has_value()) ImGui::PopStyleColor();
-
-        // call click callback if clicked
-        if (pressed && m_onClickCallback) {
-            m_onClickCallback();
-        }
 	}
 
 	ImVec2 Button::OnCalcSize() {

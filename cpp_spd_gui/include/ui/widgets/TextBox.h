@@ -4,10 +4,8 @@
 namespace spd::ui {
 	class TextBox : public Widget {
 	public:
-        // tag is used for imgui id generation
         TextBox(const std::string& placeholder = "");
 
-        // builder properties
         TextBox* OnChange(std::function<void(const std::string&)> callback);
         TextBox* SetPassword(bool isPassword) { m_isPassword = isPassword; return this; }
 

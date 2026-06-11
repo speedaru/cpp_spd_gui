@@ -22,9 +22,14 @@ namespace spd::ui {
         }
     };
 
+    void Box::Update() {
+        Container::Update();
+        CalculateFlex();
+    }
+
     void Box::OnRender() {
         float spacing = m_style.spacing.value_or(0.f);
-        Alignment align = m_style.alignment.value_or(Alignment::Center);
+        Alignment align = m_style.alignment.value_or(Alignment::Default);
 
         AxisConfig axis{ m_orientation };
 
@@ -74,11 +79,6 @@ namespace spd::ui {
         return calculatedSize;
     }
 
-    void Box::Update() {
-        Container::Update();
-        CalculateFlex();
-    }
-
     void Box::CalculateFlex() {
         bool flexed = false;
         AxisConfig axis{ m_orientation };
@@ -96,18 +96,21 @@ namespace spd::ui {
         bool flexed = true;
         
         for (const auto& child : m_children) {
-            if (axis.GetCrossGrow(child->m_style)) {
-                Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
-                float targetCross = availableCross - axis.GetCrossTotal(childMargin);
-
-                if (targetCross > axis.GetCross(child->GetBoxSize())) {
-                    ImVec2 newBaseSize = child->GetBoxSize();
-                    axis.SetCross(newBaseSize, targetCross);
-                    child->SetBaseSize(newBaseSize);
-                    child->Update();
-                    flexed = true;
-                }
+            // grow not set to true
+            if (!axis.GetCrossGrow(child->m_style)) {
+                continue;
             }
+
+			Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
+			float targetCross = availableCross - axis.GetCrossTotal(childMargin);
+
+			if (targetCross > axis.GetCross(child->GetBoxSize())) {
+				ImVec2 newBaseSize = child->GetBoxSize();
+				axis.SetCross(newBaseSize, targetCross);
+				child->SetBaseSize(newBaseSize);
+				child->Update();
+				flexed = true;
+			}
         }
 
         return flexed;

@@ -10,6 +10,8 @@ namespace spd::ui {
         Button(const std::string& text) : Label(text, DEFAULT_TAG) {}
         Button(const std::string& text, const char* tag) : Label(text, tag) {}
 
+        void Update() override;
+
 		// callback setter
         Button* OnClick(std::function<void()> callback);
 

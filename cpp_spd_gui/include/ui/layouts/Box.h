@@ -23,8 +23,9 @@ namespace spd::ui {
         void OnRender() override;
         ImVec2 OnCalcSize() override;
 
+		void CalculateFlex();
+
     private:
-        void CalculateFlex();
         bool CalcCrossAxisGrow(const AxisConfig& axis, float availableCross);
         bool CalcMainAxisGrow(const AxisConfig& axis, float availableMain);
 

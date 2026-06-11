@@ -6,6 +6,7 @@
 #include "QuicksandSemiBold.hpp"
 
 #include <ui/layouts/Box.h>
+#include <ui/layouts/ViewSwitcher.h>
 
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
@@ -111,48 +112,58 @@ std::unique_ptr<spd::ui::Container> Test(spd::core::Application& app) {
 }
 
 std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
-	auto root = spd::ui::MakeVbox();
-	root->SetTag("root");
-	root->m_style
+	auto scene = spd::ui::MakeVbox();
+	scene->SetTag("root");
+	scene->m_style
 		.SetAlignment(spd::ui::Alignment::Top)
 		.SetFont(assets::quicksand.Get(18.f))
 		.SetBorderColor({ 0, 255, 0, 255 })
-		.SetBorderSize(1.f);
+		.SetBorderSize(0.f);
 
-	auto nav = root->Add(spd::ui::MakeNavBar());
+	auto nav = scene->Add(spd::ui::MakeNavBar());
 	nav->m_style
 		.SetFrameBgColor({ 255, 155, 105, 105 })
 		.SetBgColor({ 255, 155, 105, 155 })
 		.SetHoverColor({ 255, 155, 105, 205 })
 		.SetActiveColor({ 255, 155, 105, 255 });
-	nav->AddTitle("FasterPeak Hub");
+	nav->AddTitle("Temp Spoofer Loader");
 	
 	nav->SetNavButtonSize({ 20.f, 0.f });
 	nav->AddMinButton([&app]() { app.Minimize(); });
 	nav->AddCloseButton([&app]() { app.Close(); });
 
-	auto mainVbox = root->Add(spd::ui::MakeVbox());
-	mainVbox->m_style
+	// view switchers
+	auto _rootView = spd::ui::MakeViewSwitcher("root view switcher");
+	_rootView->m_style
 		.SetVgrow(true)
 		.SetHgrow(true)
-		.SetBorderColor({ 255, 155, 105, 155 })
+		.SetBorderColor({ 0, 255, 0, 155 })
 		.SetBorderSize(1.f);
 
-	auto vbox = mainVbox->Add(spd::ui::MakeVbox());
-	vbox->SetBaseSize({ 250.f, 0.f });
-	vbox->m_style
+	auto _mainView = spd::ui::MakeViewSwitcher("main view switcher");
+	_mainView->m_style
+		.SetVgrow(true)
+		.SetHgrow(true)
+		.SetBorderColor({ 0, 0, 255, 155 })
+		.SetBorderSize(1.f);
+
+	auto viewSwitcher = scene->Add(std::move(_rootView));
+	auto loginRoot = viewSwitcher->AddView("login_view", spd::ui::MakeVbox());
+	loginRoot->SetTag("login vbox");
+	loginRoot->SetBaseSize({ 250.f, 0.f });
+	loginRoot->m_style
 		.SetAlignment(spd::ui::Alignment::Center)
 		.SetMargin({ 0.f, 0.f, 80.f, 0.f })
-		.SetBorderColor({ 255, 0, 255, 155 })
-		.SetBorderSize(0.f);
+		.SetBorderColor({ 0, 0, 255, 155 })
+		.SetBorderSize(1.f);
 
 	// Title
-	vbox->Add(spd::ui::MakeLabel("FasterPeak Loader"))
+	loginRoot->Add(spd::ui::MakeLabel("FasterPeak Loader"))
 		->m_style
 			.SetFont(assets::quicksand.Get(24.f))
 			.SetPadding({ 0.f, 0.f, 20.f, 0.f });
 
-	vbox->Add(spd::ui::MakeLabel("License :"))
+	loginRoot->Add(spd::ui::MakeLabel("License :"))
 		->m_style
 		.SetPadding({ 4.f })
 		.SetFont(assets::quicksand.Get(18.f))
@@ -160,7 +171,8 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 		.SetTextColor({ 255, 255, 255, 200 }); // Subtle grey title text
 
 	// The input field
-	auto licenseBox = vbox->Add(spd::ui::MakeTextBox("Enter License..."));
+	auto licenseBox = loginRoot->Add(spd::ui::MakeTextBox("Enter License..."));
+	licenseBox->SetText("valid-key-123");
 	licenseBox->m_style
 		.SetPadding({ 8.f })
 		.SetBgColor({ 25, 25, 25, 255 })
@@ -178,8 +190,8 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 		.SetFont(assets::quicksand.Get(14.f));
 
 	// The Login Button
-	vbox->Add(spd::ui::MakeButton("Login", "btn_login"))
-		->OnClick([licenseBox, statusLabelPtr]() {
+	loginRoot->Add(spd::ui::MakeButton("Login", "btn_login"))
+		->OnClick([licenseBox, statusLabelPtr, viewSwitcher]() {
 			std::string key = licenseBox->GetText();
 
 			if (key.empty()) {
@@ -189,6 +201,7 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 			else if (key == "valid-key-123") {
 				statusLabelPtr->SetText("Valid License");
 				statusLabelPtr->m_style.SetTextColor({ 50, 255, 50, 255 }); // Success Green
+				viewSwitcher->SwitchTo("main_view");
 			}
 			else {
 				statusLabelPtr->SetText("Invalid or Expired Serial Key");
@@ -201,13 +214,69 @@ std::unique_ptr<spd::ui::Container> LoginForm(spd::core::Application& app) {
 		.SetRounding(4.f)
 		.SetHgrow(true);
 
-	vbox->Add(std::move(statusLabel));
+	loginRoot->Add(std::move(statusLabel));
 
-	return std::move(root);
+	// main window
+
+	auto mainRoot = viewSwitcher->AddView("main_view", spd::ui::MakeHbox());
+	mainRoot->SetTag("main hbox");
+	mainRoot->m_style
+		.SetHgrow(true)
+		.SetVgrow(true)
+		.SetAlignment(spd::ui::Alignment::TopLeft)
+		.SetBorderColor({ 255, 0, 0, 255 })
+		.SetBorderSize(1.f);
+
+	auto sidebar = mainRoot->Add(spd::ui::MakeVbox());
+	sidebar->SetTag("sidebar");
+	sidebar->m_style
+		.SetAlignment(spd::ui::Alignment::Top)
+		.SetVgrow(true)
+		.SetPadding({ 8.f })
+		.SetSpacing({ 8.f })
+		.SetBgColor({ 50, 50, 50, 255 })
+		.SetBorderColor({ 255, 0, 0, 205 })
+		.SetBorderSize(1.f);
+
+	auto mainView = mainRoot->Add(std::move(_mainView));
+
+	ImVec2 buttonSize{ 40.f, 40.f };
+
+	// home tab
+	auto bHome = sidebar->Add(spd::ui::MakeButton("H"));
+	bHome->SetBaseSize(buttonSize);
+	bHome->OnClick([mainView]() {
+		mainView->SwitchTo("home_tab");
+	});
+
+	auto homeTab = mainView->AddView("home_tab", spd::ui::MakeVbox());
+	homeTab->Add(spd::ui::MakeLabel("FasterPeak Spoofer", "main_label_home"));
+
+	// b1 tab
+	auto b1 = sidebar->Add(spd::ui::MakeButton("B1"));
+	b1->SetBaseSize(buttonSize);
+	b1->OnClick([mainView]() {
+		mainView->SwitchTo("b1_tab");
+	});
+
+	auto b1Tab = mainView->AddView("b1_tab", spd::ui::MakeVbox());
+	b1Tab->Add(spd::ui::MakeLabel("B1 tab", "main_label_b1"));
+
+	// b2 tab
+	auto b2 = sidebar->Add(spd::ui::MakeButton("B2"));
+	b2->SetBaseSize(buttonSize);
+	b2->OnClick([mainView]() {
+		mainView->SwitchTo("b2_tab");
+	});
+
+	auto b2Tab = mainView->AddView("b2_tab", spd::ui::MakeVbox());
+	b2Tab->Add(spd::ui::MakeLabel("B2 tab", "main_label_b2"));
+
+	return std::move(scene);
 }
 
 int main(int argc, char** argv) {
-	logging::LoggerInit(nullptr, logging::LogLevel::Debug | logging::LogLevel::Error);
+	logging::LoggerInit(nullptr, logging::LogLevel::Debug | logging::LogLevel::Warn | logging::LogLevel::Error);
 
 	spd::core::AppConfig config{
 		.borderless = true,

@@ -10,6 +10,7 @@ namespace spd::ui {
 		Widget() { GenerateID(); }
 		virtual ~Widget() = default;
 
+		// recalculate content size and box model size
 		virtual void Update();
 		void Render();
 

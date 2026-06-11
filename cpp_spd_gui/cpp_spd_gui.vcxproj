@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\layouts\ViewSwitcher.cpp" />
     <ClCompile Include="src\ui\widgets\NavBar.cpp" />
     <ClCompile Include="src\backend\render.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="include\ui\Container.h" />
     <ClInclude Include="include\core\Font.h" />
     <ClInclude Include="include\ui\layouts\Box.h" />
+    <ClInclude Include="include\ui\layouts\ViewSwitcher.h" />
     <ClInclude Include="include\ui\Style.h" />
     <ClInclude Include="include\ui\Types.h" />
     <ClInclude Include="include\ui\Widget.h" />
@@ -206,6 +208,9 @@
     <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

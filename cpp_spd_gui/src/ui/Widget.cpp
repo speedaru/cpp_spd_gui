@@ -5,7 +5,6 @@ namespace spd::ui {
 	void Widget::Update() {
 		// resolve font from this widget or parents
         ImFont* resolvedFont = ResolveStyle(&Style::font, (ImFont*)nullptr);
-
 		if (resolvedFont) ImGui::PushFont(resolvedFont);
 
 		// wrap size calculation with font block

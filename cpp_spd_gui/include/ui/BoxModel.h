@@ -29,8 +29,13 @@ namespace spd::ui {
 		// get position of border (position + margin)
         ImVec2 CalcBoxPosition(ImVec2 position) const;
 
+		// position another box model horizontally aligned inside this box
 		float CalcPositionX(const BoxModel& other, Alignment align) const;
+
+		// position another box model vertically aligned inside this box
 		float CalcPositionY(const BoxModel& other, Alignment align) const;
+
+		// position another box model aligned inside this box
 		ImVec2 CalcPosition(const BoxModel& other, Alignment align) const;
 	};
 }

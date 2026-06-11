@@ -104,6 +104,7 @@ namespace spd::core {
             if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
+            //std::this_thread::sleep_for(std::chrono::milliseconds(250));
         }
     }
 

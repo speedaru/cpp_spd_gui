@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <backend/render.h>
 #include <core/Application.h>
+#include <core/event_dispatcher.h>
 #include <utils/screen.h>
 using namespace spd::backend;
 
@@ -225,6 +226,7 @@ namespace spd::core {
 
 			m_root->Update();
 			m_root->Render();
+            spd::core::event_dispatcher::Flush();
 		}
 
         ImGui::End();

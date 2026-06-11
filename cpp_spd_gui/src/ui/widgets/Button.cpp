@@ -1,23 +1,8 @@
 #include "pch.h"
+#include <core/event_dispatcher.h>
 #include <ui/widgets/Button.h>
 
 namespace spd::ui {
-    void Button::Update() {
-        Widget::Update();
-
-        // handle click
-		ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
-		ImVec2 boxSize = m_boxModel.boxSize;
-
-		// invisible imgui button for click detection
-		ImGui::SetCursorPos(borderPos);
-		bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
-
-		if (pressed) {
-			m_onClickCallback();
-		}
-    }
-
     Button* spd::ui::Button::OnClick(std::function<void()> callback) {
 		m_onClickCallback = callback;
 		return this;
@@ -30,6 +15,11 @@ namespace spd::ui {
 		// invisible imgui button for click detection
 		ImGui::SetCursorPos(borderPos);
 		bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
+
+        // defer click callback
+		if (pressed && m_onClickCallback) {
+            core::event_dispatcher::Defer(m_onClickCallback);
+		}
 
         // interaction state
         bool isHovered = ImGui::IsItemHovered();

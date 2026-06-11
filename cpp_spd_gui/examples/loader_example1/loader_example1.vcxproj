@@ -152,9 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="views.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QuicksandSemiBold.hpp" />
+    <ClInclude Include="views.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,8 +11,6 @@ namespace spd::ui {
         m_style.SetHgrow(true);
         
         // apply comfortable layout baseline behaviors
-        m_style.SetPadding({ 8.f, 16.f, 8.f, 16.f });
-        m_style.SetSpacing(12.f);
         m_style.SetAlignment(Alignment::Left);
     }
 

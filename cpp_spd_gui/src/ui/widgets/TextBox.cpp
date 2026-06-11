@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <core/event_dispatcher.h>
 #include <ui/widgets/TextBox.h>
 #include <imgui/imgui_internal.h>
 
@@ -86,7 +87,7 @@ namespace spd::ui {
 
         // text changed callback
         if (changed && m_onChangeCallback) {
-            m_onChangeCallback(std::string(m_buffer));
+            core::event_dispatcher::Defer(m_onChangeCallback, std::string(m_buffer));
         }
     }
 

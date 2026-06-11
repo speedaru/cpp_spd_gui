@@ -26,7 +26,6 @@ namespace spd::ui {
         }
 
         m_activeView = { .name = name, .view = it->second };
-        LOG_D("switched to %.*s\n", m_activeView.name.length(), m_activeView.name.data());
     }
 
     void ViewSwitcher::OnRender() {

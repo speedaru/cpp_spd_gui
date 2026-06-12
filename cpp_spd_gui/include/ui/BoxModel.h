@@ -21,7 +21,7 @@ namespace spd::ui {
 		void Recalculate(ImVec2 contentSize, ImVec2 baseSize);
 
 		// box size without padding
-		ImVec2 GetContentAreaSize();
+		ImVec2 GetContentAreaSize() const;
 
 		// calc position of content (position + margin + padding)
         ImVec2 CalcContentPosition(ImVec2 position) const;
@@ -37,5 +37,8 @@ namespace spd::ui {
 
 		// position another box model aligned inside this box
 		ImVec2 CalcPosition(const BoxModel& other, Alignment align) const;
+
+		// calc content start position (position + margin + padding + alignment)
+		ImVec2 CalcAlignedContentStart(ImVec2 position, Alignment align) const;
 	};
 }

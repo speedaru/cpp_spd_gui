@@ -23,8 +23,8 @@ namespace spd::ui {
 		const size_t GetChildCount() const;
 		
 	protected:
-        virtual void OnRender() = 0;
         virtual ImVec2 OnCalcSize() = 0;
+        virtual void OnRender() = 0;
 
 	protected:
 		std::vector<Child> m_children;

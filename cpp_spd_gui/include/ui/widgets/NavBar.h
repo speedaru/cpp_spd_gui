@@ -1,14 +1,16 @@
 #pragma once
 #include <string>
 #include <functional>
-#include <ui/layouts/Box.h>
+#include <ui/layouts/Hbox.h>
 
 namespace spd::ui {
     class Label;
     class Button;
 
-    class NavBar : public Box {
+    class NavBar : public Hbox {
     public:
+        static constexpr const char* DEFAULT_TAG = "unnamed nav bar";
+
         NavBar();
 
         NavBar* SetNavButtonSize(ImVec2 size);

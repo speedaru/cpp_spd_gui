@@ -8,7 +8,8 @@
 #include <ui/widgets/NavBar.h>
 
 #include <ui/layouts/ViewSwitcher.h>
-#include <ui/layouts/Box.h>
+#include <ui/layouts/Hbox.h>
+#include <ui/layouts/Vbox.h>
 using namespace spd;
 
 namespace views {
@@ -64,7 +65,7 @@ namespace views {
             .SetFont(assets::quicksand.Get(18.f));
 
         // Form Title text
-        loginForm->Add(ui::MakeLabel("FasterPeak Loader"))
+        loginForm->Add(ui::MakeLabel("FasterPeak Loader", "login_header_label"))
             ->m_style.SetFont(assets::quicksand.Get(24.f)).SetPadding({ 0.f, 0.f, 20.f, 0.f });
 
         // Input Field Header
@@ -72,7 +73,7 @@ namespace views {
             ->m_style.SetAlignment(ui::Alignment::Left).SetPadding({4.f}).SetTextColor({255, 255, 255, 200});
 
         // Serial Key Input Box
-        auto licenseInput = loginForm->Add(ui::MakeTextBox("Enter License..."));
+        auto licenseInput = loginForm->Add(ui::MakeTextBox("Enter License...", "license_textbox"));
         licenseInput->SetText("valid-key-123");
         licenseInput->m_style
             .SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true)
@@ -84,7 +85,7 @@ namespace views {
         loginButton->m_style.SetMargin({ 0.f, 8.f }).SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true);
 
         // Status Feedback String (Instantly capture raw pointer on allocation!)
-        auto statusLabel = loginForm->Add(ui::MakeLabel(""));
+        auto statusLabel = loginForm->Add(ui::MakeLabel("", "status_label"));
         statusLabel->m_style.SetPadding({ 6.f }).SetFont(assets::quicksand.Get(14.f));
 
         loginButton->OnClick([=]() { HandleLoginButton(licenseInput, statusLabel, masterDeck); });
@@ -94,14 +95,14 @@ namespace views {
 
     static std::unique_ptr<ui::Widget> BuildDashboardPanel(core::Application& app) {
         auto dashboardWorkspace = ui::MakeHbox();
-        dashboardWorkspace->SetTag("dashboard_workspace");
+        dashboardWorkspace->SetTag("dashboard_workspace_hbox");
         dashboardWorkspace->m_style.SetHgrow(true).SetVgrow(true).SetAlignment(ui::Alignment::TopLeft);
 
         // ==========================================
         // 1. LEFT SIDEBAR MENU
         // ==========================================
         auto sidebar = dashboardWorkspace->Add(ui::MakeVbox());
-        sidebar->SetTag("dashboard_sidebar");
+        sidebar->SetTag("dashboard_sidebar_vbox");
         sidebar->m_style
             .SetAlignment(ui::Alignment::Top).SetVgrow(true)
             .SetPadding({ 8.f }).SetSpacing({ 8.f }).SetBgColor({ 50, 50, 50, 255 });

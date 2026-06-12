@@ -1,11 +1,16 @@
 #include "pch.h"
 #include <core/event_dispatcher.h>
 #include <ui/widgets/Button.h>
+#include <utils/imgui_utils.h>
 
 namespace spd::ui {
     Button* spd::ui::Button::OnClick(std::function<void()> callback) {
 		m_onClickCallback = callback;
 		return this;
+	}
+
+	ImVec2 Button::OnCalcSize() {
+		return ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
 	}
 
     void Button::OnRender() {
@@ -26,16 +31,16 @@ namespace spd::ui {
         bool isActive = ImGui::IsItemActive(); // mouse held down
 
         // resolve background color
-        ImVec4 imguiButtonColor = GetDefaultImGuiColor(ImGuiCol_Button);
+        ImVec4 imguiButtonColor = utils::GetDefaultImGuiColor(ImGuiCol_Button);
         Color bgColor = ResolveStyle(&Style::bgColor, IMVEC4_TO_COLOR(imguiButtonColor)); // default imgui button color
 
         // use default imgui colors if no styles specified
         if (isActive) {
-            const ImVec4& imguiButtonActive = GetDefaultImGuiColor(ImGuiCol_ButtonActive);
+            const ImVec4& imguiButtonActive = utils::GetDefaultImGuiColor(ImGuiCol_ButtonActive);
             bgColor = ResolveStyle(&Style::activeColor, IMVEC4_TO_COLOR(imguiButtonActive));
         }
         else if (isHovered) {
-            const ImVec4& imguiButtonHovered = GetDefaultImGuiColor(ImGuiCol_ButtonHovered);
+            const ImVec4& imguiButtonHovered = utils::GetDefaultImGuiColor(ImGuiCol_ButtonHovered);
             bgColor = ResolveStyle(&Style::hoverColor, IMVEC4_TO_COLOR(imguiButtonHovered));
         }
 
@@ -65,9 +70,5 @@ namespace spd::ui {
         ImGui::TextUnformatted(m_text.c_str());
 
         if (textColor.has_value()) ImGui::PopStyleColor();
-	}
-
-	ImVec2 Button::OnCalcSize() {
-		return ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
 	}
 }

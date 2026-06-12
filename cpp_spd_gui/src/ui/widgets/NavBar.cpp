@@ -2,11 +2,10 @@
 #include <ui/widgets/NavBar.h>
 #include <ui/widgets/Label.h>
 #include <ui/widgets/Button.h>
+#include <utils/imgui_utils.h>
 
 namespace spd::ui {
-    NavBar::NavBar() : Box(Orientation::Horizontal) {
-        SetTag("navigation_bar");
-        
+    NavBar::NavBar() : Hbox(DEFAULT_TAG) {
         // navigation bars should instinctively fill the cross-axis width of the application frame
         m_style.SetHgrow(true);
         
@@ -24,7 +23,7 @@ namespace spd::ui {
             return this;
         }
 
-        auto titleLabel = MakeLabel(title);
+        auto titleLabel = MakeLabel(title, "nav_bar_title");
         titleLabel->m_style.SetHgrow(true).SetAlignment(Alignment::Left);
 
         m_titleLabel = titleLabel.get();
@@ -72,7 +71,7 @@ namespace spd::ui {
         }
         else {
             // default imgui 
-            ImVec4 imguiDefault = GetDefaultImGuiColor(ImGuiCol_TitleBgActive);
+            ImVec4 imguiDefault = utils::GetDefaultImGuiColor(ImGuiCol_TitleBgActive);
             resolvedColor = IMVEC4_TO_COLOR(imguiDefault);
         }
 

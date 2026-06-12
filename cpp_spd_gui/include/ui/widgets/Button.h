@@ -5,7 +5,7 @@
 namespace spd::ui {
 	class Button : public Label {
 	public:
-        static constexpr const char* DEFAULT_TAG = "unnamed label";
+        static constexpr const char* DEFAULT_TAG = "unnamed button";
 
         Button(const std::string& text) : Label(text, DEFAULT_TAG) {}
         Button(const std::string& text, const char* tag) : Label(text, tag) {}
@@ -14,8 +14,8 @@ namespace spd::ui {
         Button* OnClick(std::function<void()> callback);
 
 	protected:
-		void OnRender() override;
 		ImVec2 OnCalcSize() override;
+		void OnRender() override;
 
 	private:
         std::function<void()> m_onClickCallback = nullptr;

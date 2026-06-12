@@ -1,12 +1,14 @@
 #include "pch.h"
 #include <core/event_dispatcher.h>
 #include <ui/widgets/TextBox.h>
+#include <utils/imgui_utils.h>
+
 #include <imgui/imgui_internal.h>
 
 namespace spd::ui {
-    TextBox::TextBox(const std::string& placeholder)
+    TextBox::TextBox(const std::string& placeholder, const char* tag)
         : m_placeholder(placeholder) {
-        LOG_D("id for textbox: %s\n", m_id.c_str());
+        m_tag = tag;
     }
 
     TextBox* TextBox::OnChange(std::function<void(const std::string&)> callback) {
@@ -37,15 +39,15 @@ namespace spd::ui {
         bool isActive = (ImGui::GetActiveID() == ImGui::GetID(m_id.c_str()));
 
         // resolve colors
-        ImVec4 imguiFrameColor = GetDefaultImGuiColor(ImGuiCol_FrameBg);
+        ImVec4 imguiFrameColor = utils::GetDefaultImGuiColor(ImGuiCol_FrameBg);
         Color frameColor = ResolveStyle(&Style::bgColor, IMVEC4_TO_COLOR(imguiFrameColor)); // default imgui textbox bg color
 
         if (isActive) {
-            const ImVec4& imguiFrameActive = GetDefaultImGuiColor(ImGuiCol_FrameBgActive);
+            const ImVec4& imguiFrameActive = utils::GetDefaultImGuiColor(ImGuiCol_FrameBgActive);
             frameColor = ResolveStyle(&Style::activeColor, IMVEC4_TO_COLOR(imguiFrameActive));
         }
         else if (isHovered) {
-            const ImVec4& imguiFrameHovered = GetDefaultImGuiColor(ImGuiCol_FrameBgHovered);
+            const ImVec4& imguiFrameHovered = utils::GetDefaultImGuiColor(ImGuiCol_FrameBgHovered);
             frameColor = ResolveStyle(&Style::hoverColor, IMVEC4_TO_COLOR(imguiFrameHovered));
         }
 

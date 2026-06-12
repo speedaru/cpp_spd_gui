@@ -7,12 +7,14 @@ namespace spd::ui {
 
     class ViewSwitcher : public Container {
     public:
-        ADD_CLASS_TAG;
         static constexpr const char* DEFAULT_TAG = "unnamed view switcher";
 
-        ViewSwitcher(const char* tag = DEFAULT_TAG) : m_tag(tag) {}
+        ViewSwitcher(const char* tag = DEFAULT_TAG) { m_tag = tag; }
 
+        // calculate active view size + self size, calculate active view flex
         void Update() override;
+        
+        void Arrange(ImVec2 finalPosition) override;
 
         // register a named view into the layout
         template <typename T>
@@ -35,8 +37,8 @@ namespace spd::ui {
         std::string GetActiveViewName() const { return m_activeView.name; }
 
     protected:
-        void OnRender() override;
         ImVec2 OnCalcSize() override;
+        void OnRender() override;
 
         void CalculateFlex();
 

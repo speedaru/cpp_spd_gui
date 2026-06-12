@@ -164,13 +164,15 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\ui\layouts\Box.cpp" />
+    <ClCompile Include="src\ui\layouts\FlexBox.cpp" />
     <ClCompile Include="src\ui\Types.cpp" />
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\widgets\Button.cpp" />
     <ClCompile Include="src\ui\widgets\Label.cpp" />
     <ClCompile Include="src\ui\widgets\Spacer.cpp" />
     <ClCompile Include="src\ui\widgets\TextBox.cpp" />
+    <ClCompile Include="src\utils\imgui_utils.cpp" />
+    <ClCompile Include="src\utils\layout_math.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\screen.cpp" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -189,7 +191,10 @@
     <ClInclude Include="include\ui\BoxModel.h" />
     <ClInclude Include="include\ui\Container.h" />
     <ClInclude Include="include\core\Font.h" />
-    <ClInclude Include="include\ui\layouts\Box.h" />
+    <ClInclude Include="include\ui\layouts\FlexBox.h" />
+    <ClInclude Include="include\ui\layouts\FlexCommon.h" />
+    <ClInclude Include="include\ui\layouts\Hbox.h" />
+    <ClInclude Include="include\ui\layouts\Vbox.h" />
     <ClInclude Include="include\ui\layouts\ViewSwitcher.h" />
     <ClInclude Include="include\ui\Style.h" />
     <ClInclude Include="include\ui\Types.h" />
@@ -199,6 +204,8 @@
     <ClInclude Include="include\ui\widgets\NavBar.h" />
     <ClInclude Include="include\ui\widgets\Spacer.h" />
     <ClInclude Include="include\ui\widgets\TextBox.h" />
+    <ClInclude Include="include\utils\imgui_utils.h" />
+    <ClInclude Include="include\utils\layout_math.h" />
     <ClInclude Include="include\utils\screen.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="include\utils\logger.h" />

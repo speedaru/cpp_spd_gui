@@ -5,10 +5,8 @@ namespace spd::ui {
     void ViewSwitcher::Update() {
         if (!m_activeView) return;
 
-        //ImVec2 originalSize = m_activeView->GetBoxSize();
-        //if (m_style.hgrow.value_or(false)) originalSize.x = 0.f;
-        //if (m_style.vgrow.value_or(false)) originalSize.y = 0.f;
-        //m_activeView->SetBaseSize(originalSize);
+        LOG_D("[MEASURE] ---> Entering ViewSwitcher (%s) Update. Active: %s\n",
+            m_tag, m_activeView.name.c_str());
 
         // update only active child
         m_activeView->Update();
@@ -16,6 +14,20 @@ namespace spd::ui {
 
         // if hgrow or vgrow then grow child size
         CalculateFlex();
+    }
+
+    void ViewSwitcher::Arrange(ImVec2 finalPosition) {
+		// Save the switcher's own verified screen boundaries
+        Widget::Arrange(finalPosition);
+        
+        if (!m_activeView) return;
+
+        // Resolve structural layout parameters for our sub-view panel
+        Alignment childAlign = m_activeView->m_style.alignment.value_or(Alignment::Default);
+        ImVec2 contentStart = m_boxModel.CalcAlignedContentStart(m_position, childAlign);
+
+        // Forward the arrangement flow directly down to the active view node
+        m_activeView->Arrange(contentStart);
     }
 
     void ViewSwitcher::SwitchTo(const std::string& name) {
@@ -28,26 +40,18 @@ namespace spd::ui {
         m_activeView = { .name = name, .view = it->second };
     }
 
-    void ViewSwitcher::OnRender() {
-        if (!m_activeView) return;
-
-        // draw active view
-        ImVec2 contentStart = m_boxModel.CalcContentPosition(m_position);
-
-        // apply alignment
-        Alignment childAlign = m_activeView->m_style.alignment.value_or(Alignment::Default);
-        contentStart += CalcAlignmentPos(m_boxModel.GetContentAreaSize(), m_boxModel.contentSize, childAlign);
-
-        m_activeView->SetPosition(contentStart);
-        m_activeView->Render();
-    }
-
     ImVec2 ViewSwitcher::OnCalcSize() {
         // size of container is the size of the active child
         if (m_activeView) {
             return m_activeView->GetTotalSize();
         }
         return { 0.f, 0.f };
+    }
+
+    void ViewSwitcher::OnRender() {
+        if (!m_activeView) return;
+
+        m_activeView->Render();
     }
 
     void ViewSwitcher::CalculateFlex() {

@@ -8,8 +8,8 @@ namespace spd::ui {
 		Spacer() = default;
 
 	protected:
-		void OnRender() override {}
 		ImVec2 OnCalcSize() override { return { 0.f, 0.f }; }
+		void OnRender() override {}
 	};
 
 	template <typename... Args>

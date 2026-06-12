@@ -1,62 +1,53 @@
 #include "pch.h"
-#include <ui/layouts/Box.h>
+#include <ui/layouts/FlexBox.h>
 
 namespace spd::ui {
-    struct AxisConfig {
-        Orientation orientation;
+    void FlexBox::Update() {
+        LOG_D("[MEASURE] ---> Entering FlexBox (%s) Update\n", m_tag);
 
-        inline float GetMain(ImVec2 v) const { return orientation == Orientation::Horizontal ? v.x : v.y; }
-        inline float GetCross(ImVec2 v) const { return orientation == Orientation::Horizontal ? v.y : v.x; }
+        Container::Update(); // calc children and self content size
 
-        inline void SetMain(ImVec2& v, float val) const { if (orientation == Orientation::Horizontal) v.x = val; else v.y = val; }
-        inline void SetCross(ImVec2& v, float val) const { if (orientation == Orientation::Horizontal) v.y = val; else v.x = val; }
+        LOG_D("[MEASURE] (%s) Natural Content Area: Size(%.1f, %.1f)\n",
+            m_tag, m_boxModel.contentSize.x, m_boxModel.contentSize.y);
 
-        inline float GetMainTotal(Offsets o) const { return orientation == Orientation::Horizontal ? o.Width() : o.Height(); }
-        inline float GetCrossTotal(Offsets o) const { return orientation == Orientation::Horizontal ? o.Height() : o.Width(); }
-
-        inline bool GetMainGrow(const Style& s) const { return orientation == Orientation::Horizontal ? s.hgrow.value_or(false) : s.vgrow.value_or(false); }
-        inline bool GetCrossGrow(const Style& s) const { return orientation == Orientation::Horizontal ? s.vgrow.value_or(false) : s.hgrow.value_or(false); }
-
-        inline float CalcCrossOffset(float layoutSize, float contentSize, Alignment align) const {
-            return orientation == Orientation::Horizontal ? CalcAlignmentY(layoutSize, contentSize, align) : CalcAlignmentX(layoutSize, contentSize, align);
-        }
-    };
-
-    void Box::Update() {
-        Container::Update();
-        CalculateFlex();
+        CalculateFlex(); // grow + recalc size
     }
 
-    void Box::OnRender() {
+    void FlexBox::Arrange(ImVec2 finalPosition) {
+		// First, call base class to save this container's own absolute starting position
+        Widget::Arrange(finalPosition);
+
         float spacing = m_style.spacing.value_or(0.f);
         Alignment align = m_style.alignment.value_or(Alignment::Default);
-
         AxisConfig axis{ m_orientation };
 
-        ImVec2 contentStart = m_boxModel.CalcContentPosition(m_position);
-        contentStart += CalcAlignmentPos(m_boxModel.GetContentAreaSize(), m_boxModel.contentSize, align);
-
+        // Safe to call: m_position is now guaranteed to be completely accurate for this frame
+        ImVec2 contentStart = m_boxModel.CalcAlignedContentStart(m_position, align);
         float currentMain = axis.GetMain(contentStart);
 
-        // render children
+        // Pass 3: Distribute finalized position vectors from the top down
         for (const auto& child : m_children) {
             Alignment childAlign = child->m_style.alignment.value_or(align);
 
-            // calculate item offset on cross axis
-            float offCross = axis.CalcCrossOffset(axis.GetCross(m_boxModel.contentSize), axis.GetCross(child->GetTotalSize()), childAlign);
+            float offCross = axis.CalcCrossOffset(
+                axis.GetCross(m_boxModel.contentSize), 
+                axis.GetCross(child->GetTotalSize()), 
+                childAlign
+            );
 
             ImVec2 childPos;
             axis.SetMain(childPos, currentMain);
             axis.SetCross(childPos, axis.GetCross(contentStart) + offCross);
 
-            child->SetPosition(childPos);
-            child->Render();
+            // CRITICAL: Recursively command the child to arrange its internal layout
+            // using the perfectly accurate position vector we just calculated
+            child->Arrange(childPos);
 
             currentMain += axis.GetMain(child->GetTotalSize()) + spacing;
         }
     }
 
-	ImVec2 Box::OnCalcSize() {
+	ImVec2 FlexBox::OnCalcSize() {
         ImVec2 calculatedSize = { 0.0f, 0.0f };
         AxisConfig axis{ m_orientation };
 
@@ -79,7 +70,13 @@ namespace spd::ui {
         return calculatedSize;
     }
 
-    void Box::CalculateFlex() {
+    void FlexBox::OnRender() {
+        for (const auto& child : m_children) {
+            child->Render();
+        }
+    }
+
+    void FlexBox::CalculateFlex() {
         bool flexed = false;
         AxisConfig axis{ m_orientation };
 
@@ -92,8 +89,8 @@ namespace spd::ui {
         if (flexed) Widget::Update();
     }
 
-    bool Box::CalcCrossAxisGrow(const AxisConfig& axis, float availableCross) {
-        bool flexed = true;
+    bool FlexBox::CalcCrossAxisGrow(const AxisConfig& axis, float availableCross) {
+        bool flexed = false;
         
         for (const auto& child : m_children) {
             // grow not set to true
@@ -116,8 +113,8 @@ namespace spd::ui {
         return flexed;
     }
 
-    bool Box::CalcMainAxisGrow(const AxisConfig& axis, float availableMain) {
-        bool flexed = true;
+    bool FlexBox::CalcMainAxisGrow(const AxisConfig& axis, float availableMain) {
+        bool flexed = false;
 
         if (availableMain > 0.f) {
             float consumedMain = 0.f;
@@ -139,6 +136,9 @@ namespace spd::ui {
                     if (axis.GetMainGrow(child->m_style)) {
                         Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
                         float targetMain = extraPerChild - axis.GetMainTotal(childMargin);
+
+                        LOG_I("[FLEX] Stretched Main-Axis child (%s) inside parent (%s) to Width/Height: %.1f\n",
+                            child->m_tag, this->m_tag, targetMain);
 
                         ImVec2 newBaseSize = child->GetBoxSize();
                         axis.SetMain(newBaseSize, targetMain);

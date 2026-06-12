@@ -3,15 +3,22 @@
 #include <string>
 #include <ui/Style.h>
 #include <ui/BoxModel.h>
+#include <utils/logger.h>
 
 namespace spd::ui {
 	class Widget {
 	public:
+		ADD_CLASS_TAG;
+
 		Widget() { GenerateID(); }
 		virtual ~Widget() = default;
 
-		// recalculate content size and box model size
+		// recalculate sizes
 		virtual void Update();
+
+		// arrange position
+		virtual void Arrange(ImVec2 finalPosition);
+
 		void Render();
 
 		template <typename T>
@@ -31,10 +38,10 @@ namespace spd::ui {
 		Style m_style;
 
 	protected:
-		// virtual methods for derived classes
-        virtual void OnRender() = 0;
 		// calc content size
         virtual ImVec2 OnCalcSize() = 0;
+		// render content
+        virtual void OnRender() = 0;
 
 		virtual void RenderBackground();
 

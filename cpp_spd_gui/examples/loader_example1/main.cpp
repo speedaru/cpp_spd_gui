@@ -11,7 +11,12 @@ static void SetupFonts(ImGuiIO& io) {
 }
 
 int main(int argc, char** argv) {
-	logging::LoggerInit(nullptr, logging::LogLevel::Debug | logging::LogLevel::Warn | logging::LogLevel::Error);
+	logging::LoggerInit(nullptr,
+		logging::LogLevel::Debug |
+		logging::LogLevel::Info |
+		logging::LogLevel::Warn |
+		logging::LogLevel::Error |
+		logging::LogLevel::Trace);
 
 	spd::core::AppConfig config{
 		.borderless = true,

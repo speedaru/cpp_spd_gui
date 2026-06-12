@@ -105,7 +105,7 @@ namespace spd::core {
             if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
-            //std::this_thread::sleep_for(std::chrono::milliseconds(250));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
 
@@ -210,6 +210,7 @@ namespace spd::core {
         bool* pOpen = m_config.useCustomTitleBar ? nullptr : &m_isRunning;
         ImGui::Begin(windowData.menuName, pOpen, flags);
 
+        static int frameCounter = 1;
 		if (m_root) {
             float titlebarHeight = Application::GetTitleBarHeight();
             
@@ -225,8 +226,11 @@ namespace spd::core {
             }
 
 			m_root->Update();
+            m_root->Arrange({ 0.f, 0.f });
 			m_root->Render();
             spd::core::event_dispatcher::Flush();
+
+            LOG_D("frame %d: --------------------------------------------------\n", frameCounter++);
 		}
 
         ImGui::End();

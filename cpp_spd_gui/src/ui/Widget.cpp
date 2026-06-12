@@ -16,6 +16,10 @@ namespace spd::ui {
 		m_boxModel.Recalculate(contentSize, m_baseSize);
 	}
 
+	void Widget::Arrange(ImVec2 finalPosition) {
+		m_position = finalPosition;
+	}
+
 	void Widget::Render() {
 		// draw background for all widgets
 		RenderBackground();

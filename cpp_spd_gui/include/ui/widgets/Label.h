@@ -5,7 +5,6 @@
 namespace spd::ui {
     class Label : public Widget {
     public:
-		ADD_CLASS_TAG;
         static constexpr const char* DEFAULT_TAG = "unnamed label";
 
         Label(const std::string& text);
@@ -16,8 +15,8 @@ namespace spd::ui {
         void SetText(const std::string& text);
 
 	protected:
-        void OnRender() override;
         ImVec2 OnCalcSize() override;
+        void OnRender() override;
 
     protected:
         std::string m_text;

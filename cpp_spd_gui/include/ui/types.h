@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <string>
+#include <imgui/imgui.h>
 
 typedef unsigned int        ImU32;  // 32-bit unsigned integer (often used to store packed colors)
 
@@ -62,18 +64,7 @@ namespace spd::ui {
 		Default = Center,
 	};
 
-	ImVec4 GetDefaultImGuiColor(ImGuiCol col);
-
 	std::string GetAlignmentStr(Alignment alignment);
-
-	// calc x position of an item based on its width and a container's width
-	float CalcAlignmentX(float containerWidth, float itemWidth, Alignment alignment);
-
-	// calc y position of an item based on its height and a container's height
-	float CalcAlignmentY(float containerHeight, float itemHeight, Alignment alignment);
-
-	// calc position of an item based on its size and a container's size
-	ImVec2 CalcAlignmentPos(ImVec2 containerSize, ImVec2 itemSize, Alignment alignment);
 
 	static Alignment operator|(Alignment a, Alignment b) { return static_cast<Alignment>((uint8_t)a | (uint8_t)b); }
 	static bool operator&(Alignment a, Alignment b) { return (uint8_t)a & (uint8_t)b; }

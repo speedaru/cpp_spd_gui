@@ -72,7 +72,7 @@
     <ClCompile Include="src\core\Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\layouts\Box.cpp">
+    <ClCompile Include="src\ui\layouts\FlexBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\widgets\Spacer.cpp">
@@ -85,6 +85,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\event_dispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\layout_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\imgui_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,7 +167,7 @@
     <ClInclude Include="include\core\Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\layouts\Box.h">
+    <ClInclude Include="include\ui\layouts\FlexBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\widgets\Spacer.h">
@@ -174,6 +180,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\event_dispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\layout_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\imgui_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\layouts\Hbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\layouts\Vbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\layouts\FlexCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

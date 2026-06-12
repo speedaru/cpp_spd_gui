@@ -4,7 +4,9 @@
 namespace spd::ui {
 	class TextBox : public Widget {
 	public:
-        TextBox(const std::string& placeholder = "");
+        static constexpr const char* DEFAULT_TAG = "unnamed text box";
+
+        TextBox(const std::string& placeholder = "", const char* tag = DEFAULT_TAG);
 
         TextBox* OnChange(std::function<void(const std::string&)> callback);
         TextBox* SetPassword(bool isPassword) { m_isPassword = isPassword; return this; }
@@ -13,8 +15,8 @@ namespace spd::ui {
         void SetText(const std::string& text);
 
     protected:
-        void OnRender() override;
         ImVec2 OnCalcSize() override;
+        void OnRender() override;
 
     private:
         char m_buffer[256] = { 0 };

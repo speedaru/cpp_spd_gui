@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <ui/BoxModel.h>
+#include <utils/layout_math.h>
 
 namespace spd::ui {
 	void BoxModel::Recalculate(ImVec2 contentSize, ImVec2 baseSize) {
@@ -19,7 +20,7 @@ namespace spd::ui {
         totalSize.y = boxSize.y + margin.Height();
 	}
 
-	ImVec2 BoxModel::GetContentAreaSize() {
+	ImVec2 BoxModel::GetContentAreaSize() const {
 		const Offsets& padding = this->padding->value_or(Offsets::ZERO);
 		return { boxSize.x - padding.Width(), boxSize.y - padding.Height() };
 	}
@@ -40,14 +41,24 @@ namespace spd::ui {
 	}
 
 	float BoxModel::CalcPositionX(const BoxModel& other, Alignment align) const {
-		return CalcAlignmentX(contentSize.x, other.totalSize.x, align);
+		return utils::CalcAlignmentX(contentSize.x, other.totalSize.x, align);
 	}
 
 	float BoxModel::CalcPositionY(const BoxModel& other, Alignment align) const {
-		return CalcAlignmentY(contentSize.y, other.totalSize.y, align);
+		return utils::CalcAlignmentY(contentSize.y, other.totalSize.y, align);
 	}
 
 	ImVec2 BoxModel::CalcPosition(const BoxModel& other, Alignment align) const {
-		return CalcAlignmentPos(contentSize, other.totalSize, align);
+		return utils::CalcAlignmentPos(contentSize, other.totalSize, align);
+	}
+	
+	ImVec2 BoxModel::CalcAlignedContentStart(ImVec2 position, Alignment align) const {
+		// position + margin + padding
+        ImVec2 startPos = CalcContentPosition(position);
+
+		// calculate and add alignment offset
+        startPos += utils::CalcAlignmentPos(GetContentAreaSize(), contentSize, align);
+
+        return startPos;
 	}
 }

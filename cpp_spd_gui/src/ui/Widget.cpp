@@ -17,6 +17,7 @@ namespace spd::ui {
 	}
 
 	void Widget::Arrange(ImVec2 finalPosition) {
+		// just set absolute position
 		m_position = finalPosition;
 	}
 

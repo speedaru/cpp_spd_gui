@@ -105,7 +105,7 @@ namespace spd::core {
             if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
 
@@ -230,7 +230,7 @@ namespace spd::core {
 			m_root->Render();
             spd::core::event_dispatcher::Flush();
 
-            LOG_D("frame %d: --------------------------------------------------\n", frameCounter++);
+            LOG_T("frame %d: --------------------------------------------------\n", frameCounter++);
 		}
 
         ImGui::End();

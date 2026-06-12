@@ -5,7 +5,7 @@ namespace spd::ui {
     void ViewSwitcher::Update() {
         if (!m_activeView) return;
 
-        LOG_D("[MEASURE] ---> Entering ViewSwitcher (%s) Update. Active: %s\n",
+        LOG_T("[MEASURE] ---> Entering ViewSwitcher (%s) Update. Active: %s\n",
             m_tag, m_activeView.name.c_str());
 
         // update only active child
@@ -17,16 +17,15 @@ namespace spd::ui {
     }
 
     void ViewSwitcher::Arrange(ImVec2 finalPosition) {
-		// Save the switcher's own verified screen boundaries
         Widget::Arrange(finalPosition);
         
         if (!m_activeView) return;
 
-        // Resolve structural layout parameters for our sub-view panel
+        // calculate aligned content position
         Alignment childAlign = m_activeView->m_style.alignment.value_or(Alignment::Default);
         ImVec2 contentStart = m_boxModel.CalcAlignedContentStart(m_position, childAlign);
 
-        // Forward the arrangement flow directly down to the active view node
+        // make active view arrange its internal position
         m_activeView->Arrange(contentStart);
     }
 

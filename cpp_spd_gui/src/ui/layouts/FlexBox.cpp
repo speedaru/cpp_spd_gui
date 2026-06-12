@@ -3,29 +3,28 @@
 
 namespace spd::ui {
     void FlexBox::Update() {
-        LOG_D("[MEASURE] ---> Entering FlexBox (%s) Update\n", m_tag);
+        LOG_T("[MEASURE] ---> Entering FlexBox (%s) Update\n", m_tag);
 
         Container::Update(); // calc children and self content size
 
-        LOG_D("[MEASURE] (%s) Natural Content Area: Size(%.1f, %.1f)\n",
+        LOG_T("[MEASURE] (%s) Natural Content Area: Size(%.1f, %.1f)\n",
             m_tag, m_boxModel.contentSize.x, m_boxModel.contentSize.y);
 
         CalculateFlex(); // grow + recalc size
     }
 
     void FlexBox::Arrange(ImVec2 finalPosition) {
-		// First, call base class to save this container's own absolute starting position
+        // save container absolute position
         Widget::Arrange(finalPosition);
 
         float spacing = m_style.spacing.value_or(0.f);
         Alignment align = m_style.alignment.value_or(Alignment::Default);
         AxisConfig axis{ m_orientation };
 
-        // Safe to call: m_position is now guaranteed to be completely accurate for this frame
         ImVec2 contentStart = m_boxModel.CalcAlignedContentStart(m_position, align);
         float currentMain = axis.GetMain(contentStart);
 
-        // Pass 3: Distribute finalized position vectors from the top down
+        // set children position top down chain
         for (const auto& child : m_children) {
             Alignment childAlign = child->m_style.alignment.value_or(align);
 
@@ -39,8 +38,7 @@ namespace spd::ui {
             axis.SetMain(childPos, currentMain);
             axis.SetCross(childPos, axis.GetCross(contentStart) + offCross);
 
-            // CRITICAL: Recursively command the child to arrange its internal layout
-            // using the perfectly accurate position vector we just calculated
+            // arrange child internal layout
             child->Arrange(childPos);
 
             currentMain += axis.GetMain(child->GetTotalSize()) + spacing;
@@ -137,7 +135,7 @@ namespace spd::ui {
                         Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
                         float targetMain = extraPerChild - axis.GetMainTotal(childMargin);
 
-                        LOG_I("[FLEX] Stretched Main-Axis child (%s) inside parent (%s) to Width/Height: %.1f\n",
+                        LOG_T("[FLEX] Stretched Main-Axis child (%s) inside parent (%s) to Width/Height: %.1f\n",
                             child->m_tag, this->m_tag, targetMain);
 
                         ImVec2 newBaseSize = child->GetBoxSize();

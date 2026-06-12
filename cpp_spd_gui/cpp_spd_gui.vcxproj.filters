@@ -57,7 +57,7 @@
     <ClCompile Include="src\ui\widgets\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\Types.cpp">
+    <ClCompile Include="src\ui\types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ui\widgets\Button.cpp">
@@ -152,7 +152,7 @@
     <ClInclude Include="include\ui\Style.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ui\Types.h">
+    <ClInclude Include="include\ui\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\widgets\Button.h">

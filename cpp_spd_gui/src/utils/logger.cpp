@@ -5,6 +5,10 @@ using logging::LogLevel;
 static std::ofstream logFile{};
 static LogLevel g_logLevels = LogLevel::None;
 
+// overried regular new and delete to log
+void* operator new(size_t size) { return SPD_ALLOC(unsigned char, size); }
+void operator delete(void* ptr) { SPD_FREE(ptr); }
+
 const char* logging::GetLogLevelName(LogLevel level) {
     if (level & LogLevel::Trace) return "TRACE";
     else if (level & LogLevel::Debug) return "DEBUG";

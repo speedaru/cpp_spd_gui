@@ -15,7 +15,7 @@ namespace spd::core {
 		bool noImGuiIni = false;
 		bool useCustomTitleBar = true;
 		float customTitleBarHeight = 35.0f;
-		FontSetupCallback fontCallback = nullptr;
+		FontSetupCallback imguiCallback = nullptr;
 	};
 
 	class Application {

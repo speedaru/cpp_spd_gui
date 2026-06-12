@@ -169,8 +169,8 @@ namespace spd::core {
         if (config.noImGuiIni) {
             io.IniFilename = nullptr;
         }
-        if (config.fontCallback) {
-            config.fontCallback(io);
+        if (config.imguiCallback) {
+            config.imguiCallback(io);
         }
     }
 
@@ -230,11 +230,13 @@ namespace spd::core {
 			m_root->Render();
             spd::core::event_dispatcher::Flush();
 
+            //LOG_D("memory usage: %llu bytes, total allocated (%llu)\n", GetBytesAllocated(), g_totalAllocated);
             LOG_T("frame %d: --------------------------------------------------\n", frameCounter++);
 		}
 
         ImGui::End();
         ImGui::PopStyleVar(2);
+        
 		ImGui::Render();
     }
 

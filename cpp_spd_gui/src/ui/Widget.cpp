@@ -39,16 +39,15 @@ namespace spd::ui {
 	}
 
 	void Widget::RenderBorder() {
-		if (!m_style.borderColor.has_value() || !m_style.borderSize.has_value() || !m_style.borderSize.value()) return;
+		if (!m_style.border.has_value()) return;
 
         ImDrawList* draw = ImGui::GetWindowDrawList();
-        Color borderColor = m_style.borderColor.value();
-        float borderSize = m_style.borderSize.value();
+		const Border& border = m_style.border.value();
         float rounding = ResolveStyle(&Style::rounding, 0.f);
 
         ImVec2 pos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
-        draw->AddRect(pos, pos + boxSize, borderColor.imu32, rounding, 0, borderSize);
+        draw->AddRect(pos, pos + boxSize, border.color.imu32, rounding, 0, border.thickness);
 	}
 
     void Widget::RenderBackground() {

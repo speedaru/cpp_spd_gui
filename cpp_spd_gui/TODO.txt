@@ -1,9 +1,1 @@
-- better event handling like maybe make add a virtual HandleEvent() function to Widget
-
-- centralize alignment rendering so we dont have to copy paste:
-        ImVec2 contentStart = m_boxModel.CalcContentPosition(m_position);
-        contentStart += CalcAlignmentPos(m_boxModel.GetContentAreaSize(), m_boxModel.contentSize, align);
-
-across mulitple container
-
-- move alignment calculation to a seperate file
+- maybe refactor Application, to not store raw dx device pointer and m_ownsDevice flag, to a shared or unique ptr

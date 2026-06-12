@@ -1,6 +1,6 @@
 #pragma once
 #include <ui/Style.h>
-#include <ui/Types.h>
+#include <ui/types.h>
 
 struct Style;
 

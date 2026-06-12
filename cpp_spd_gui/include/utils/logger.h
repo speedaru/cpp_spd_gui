@@ -138,7 +138,7 @@ inline T* spd::TrackedAlloc(size_t count, const char* file, int line) {
 
 	T* ptr = reinterpret_cast<T*>(base + 1);
 	
-	LOG_D("[+] ALLOC: 0x%p [%zu bytes] for %zu elements at %s:%d (allocated: %zu)\n",
+	LOG_T("[+] ALLOC: 0x%p [%zu bytes] for %zu elements at %s:%d (allocated: %zu)\n",
 		ptr, size, count, file, line, GetBytesAllocated());
 
 	return ptr;
@@ -155,7 +155,7 @@ inline void spd::TrackedFree(void* ptr, const char* file, int line) {
 	size_t size = base->size;
 	g_totalFreed += size;
 
-	logging::LOG_D("[-] FREE: 0x%p [%zu bytes] at %s:%d (allocated: %zu)\n",
+	LOG_T("[-] FREE: 0x%p [%zu bytes] at %s:%d (allocated: %zu)\n",
 		ptr, size, file, line, GetBytesAllocated());
 
 	free(base);

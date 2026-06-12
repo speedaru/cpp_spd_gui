@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 #include <imgui/imgui.h>
-#include <ui/Types.h>
+#include <ui/types.h>
 
 namespace spd::ui {
 	// pass arg to setter by val
@@ -15,15 +15,15 @@ namespace spd::ui {
 		Style& setter(const T& newVal) { name = newVal; return *this; }
 
 	struct Style {
-		// layout
-		ADD_FIELD(float, spacing, SetSpacing);
-		ADD_FIELD_REF(Offsets, padding, SetPadding);
-		ADD_FIELD_REF(Offsets, margin, SetMargin);
+		// visuals
 		ADD_FIELD(Alignment, alignment, SetAlignment);
 		ADD_FIELD(bool, hgrow, SetHgrow);
 		ADD_FIELD(bool, vgrow, SetVgrow);
+		ADD_FIELD(float, spacing, SetSpacing);
 
-		// visuals
+		// layout
+		ADD_FIELD_REF(Offsets, padding, SetPadding);
+		ADD_FIELD_REF(Offsets, margin, SetMargin);
 
 		// containers
 		ADD_FIELD_REF(Color, frameBgColor, SetFrameBgColor);
@@ -31,9 +31,8 @@ namespace spd::ui {
 
 		// buttons and widgets
 		ADD_FIELD_REF(Color, bgColor, SetBgColor);
-		ADD_FIELD_REF(Color, borderColor, SetBorderColor);
+		ADD_FIELD_REF(Border, border, SetBorder);
 		ADD_FIELD(float, rounding, SetRounding);
-		ADD_FIELD(float, borderSize, SetBorderSize);
 
 		// text
 		ADD_FIELD_REF(Color, textColor, SetTextColor);

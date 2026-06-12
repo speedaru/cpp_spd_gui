@@ -5,21 +5,6 @@
 
 typedef unsigned int        ImU32;  // 32-bit unsigned integer (often used to store packed colors)
 
-#define IMVEC4_TO_COLOR(vec) Color({ \
-	(uint8_t)(vec.x * 255), \
-	(uint8_t)(vec.y * 255), \
-	(uint8_t)(vec.z * 255), \
-	(uint8_t)(vec.w * 255) \
-})
-
-constexpr const float COLOR_TO_FLOAT = 1 / 255.f;
-#define COLOR_TO_IMVEC4(col) ImVec4({ \
-	(col.r * COLOR_TO_FLOAT), \
-	(col.g * COLOR_TO_FLOAT), \
-	(col.b * COLOR_TO_FLOAT), \
-	(col.a * COLOR_TO_FLOAT) \
-})
-
 namespace spd::ui {
 	union Color {
 		struct {
@@ -29,6 +14,21 @@ namespace spd::ui {
 			uint8_t a;
 		};
 		ImU32 imu32;
+	};
+
+	enum class Alignment : uint8_t {
+		Left = 1 << 0,
+		Right = 1 << 1,
+		Top = 1 << 2,
+		Bottom = 1 << 3,
+		Center = 1 << 4,
+
+		TopLeft = Top | Left,
+		TopRight = Top | Right,
+		BottomLeft = Bottom | Left,
+		BottomRight = Bottom | Right,
+
+		Default = Center,
 	};
 
 	struct Offsets {
@@ -49,19 +49,9 @@ namespace spd::ui {
 		inline constexpr float Height() const { return top + bottom; }
 	};
 
-	enum class Alignment : uint8_t {
-		Left = 1 << 0,
-		Right = 1 << 1,
-		Top = 1 << 2,
-		Bottom = 1 << 3,
-		Center = 1 << 4,
-
-		TopLeft = Top | Left,
-		TopRight = Top | Right,
-		BottomLeft = Bottom | Left,
-		BottomRight = Bottom | Right,
-
-		Default = Center,
+	struct Border {
+		Color color{ 255, 255, 255, 255 };
+		float thickness{ 0.f };
 	};
 
 	std::string GetAlignmentStr(Alignment alignment);

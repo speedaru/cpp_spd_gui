@@ -1,5 +1,5 @@
 #pragma once
-#include <ui/Types.h>
+#include <ui/types.h>
 using namespace spd::ui;
 
 namespace spd::utils {

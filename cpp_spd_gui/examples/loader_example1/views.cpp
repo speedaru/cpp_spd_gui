@@ -78,7 +78,7 @@ namespace views {
         licenseInput->m_style
             .SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true)
             .SetBgColor({ 25, 25, 25, 255 }).SetHoverColor({ 35, 35, 35, 255 }).SetActiveColor({ 45, 45, 45, 255 })
-            .SetBorderColor({ 100, 100, 100, 255 }).SetBorderSize(1.f);
+            .SetBorder({ .color = { 100, 100, 100, 255 }, .thickness = 1.f });
 
         // Submission Button Action Node
         auto loginButton = loginForm->Add(ui::MakeButton("Login", "btn_login"));
@@ -105,7 +105,9 @@ namespace views {
         sidebar->SetTag("dashboard_sidebar_vbox");
         sidebar->m_style
             .SetAlignment(ui::Alignment::Top).SetVgrow(true)
-            .SetPadding({ 8.f }).SetSpacing({ 8.f }).SetBgColor({ 50, 50, 50, 255 });
+            .SetPadding({ 8.f })
+            .SetSpacing({ 8.f })
+            .SetBgColor({ 50, 50, 50, 255 });
 
         // ==========================================
         // 2. MAIN SUB-TAB DECK VIEW SWITCHER
@@ -127,19 +129,20 @@ namespace views {
         // ==========================================
         // 3. SIDEBAR NAVIGATION CONTROLS
         // ==========================================
-        ImVec2 navBtnSize{ 40.f, 40.f };
 
-        sidebar->Add(ui::MakeButton("H"))
-            ->OnClick([tabDeck]() { tabDeck->SwitchTo("home_tab"); })
-            ->SetBaseSize(navBtnSize);
-
-        sidebar->Add(ui::MakeButton("B1"))
-            ->OnClick([tabDeck]() { tabDeck->SwitchTo("b1_tab"); })
-            ->SetBaseSize(navBtnSize);
-
-        sidebar->Add(ui::MakeButton("B2"))
-            ->OnClick([tabDeck]() { tabDeck->SwitchTo("b2_tab"); })
-            ->SetBaseSize(navBtnSize);
+        auto makeNavButton = [sidebar](std::string&& text, const std::function<void()>& callback) {
+            return sidebar->Add(ui::MakeButton(std::move(text)))
+                ->OnClick(callback)
+                ->SetBaseSize({ 40.f, 40.f })
+                ->m_style
+					.SetRounding(8.f)
+					.SetFont(assets::quicksand.Get(32.f))
+					.SetBorder({ .color = { 255, 155, 105, 255 }, .thickness = 2.f });
+		};
+        
+        makeNavButton("H", [tabDeck]() { tabDeck->SwitchTo("home_tab"); });
+        makeNavButton("B1", [tabDeck]() { tabDeck->SwitchTo("b1_tab"); });
+        makeNavButton("B2", [tabDeck]() { tabDeck->SwitchTo("b2_tab"); });
 
         return dashboardWorkspace;
     }

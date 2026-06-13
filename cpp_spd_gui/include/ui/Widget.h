@@ -24,6 +24,9 @@ namespace spd::ui {
 		template <typename T>
 		T ResolveStyle(std::optional<T> Style::* property, T defaultValue) const;
 
+		template <typename T>
+		std::optional<T> ResolveStyleOpt(std::optional<T> Style::* property, std::optional<T> defaultValue) const;
+
 		// set base size of widget
 		inline Widget* SetBaseSize(ImVec2 newSize) { m_baseSize = newSize; return this; }
 		inline Widget* SetParent(Widget* parent) { m_parent = parent; return this; }
@@ -49,7 +52,11 @@ namespace spd::ui {
         void GenerateID();
 
 	protected:
-		std::string m_id;
+		static constexpr const char ID_PREFIX[] = "##w_";
+		static constexpr const size_t PTR_STR_LEN = sizeof(void*) * 2;
+		static constexpr const size_t ID_BUFF_SIZE = sizeof(ID_PREFIX) - 1 + PTR_STR_LEN + 1; // null terminated
+
+		char m_id[ID_BUFF_SIZE];
 		Widget* m_parent{};
 		ImVec2 m_baseSize{};
 		ImVec2 m_position{};
@@ -58,6 +65,23 @@ namespace spd::ui {
 
 	template <typename T>
 	inline T Widget::ResolveStyle(std::optional<T> Style::* property, T defaultValue) const {
+		const Widget* current = this;
+
+		while (current != nullptr) {
+			// check if the current widget set this style property
+			if ((current->m_style.*property).has_value()) {
+				return (current->m_style.*property).value();
+			}
+			// move up to the parent
+			current = current->m_parent;
+		}
+
+		// if nobody in the tree set it use default value
+		return defaultValue;
+	}
+
+	template <typename T>
+	inline std::optional<T> Widget::ResolveStyleOpt(std::optional<T> Style::* property, std::optional<T> defaultValue) const {
 		const Widget* current = this;
 
 		while (current != nullptr) {

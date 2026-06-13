@@ -49,11 +49,6 @@ namespace spd::ui {
 		inline constexpr float Height() const { return top + bottom; }
 	};
 
-	struct Border {
-		Color color{ 255, 255, 255, 255 };
-		float thickness{ 0.f };
-	};
-
 	std::string GetAlignmentStr(Alignment alignment);
 
 	static Alignment operator|(Alignment a, Alignment b) { return static_cast<Alignment>((uint8_t)a | (uint8_t)b); }

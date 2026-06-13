@@ -5,9 +5,6 @@ namespace spd::ui {
     void ViewSwitcher::Update() {
         if (!m_activeView) return;
 
-        LOG_T("[MEASURE] ---> Entering ViewSwitcher (%s) Update. Active: %s\n",
-            m_tag, m_activeView.name.c_str());
-
         // update only active child
         m_activeView->Update();
         Widget::Update();

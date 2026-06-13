@@ -29,11 +29,4 @@ namespace spd::utils {
 
 		return y;
 	}
-
-	ImVec2 CalcAlignmentPos(ImVec2 containerSize, ImVec2 itemSize, Alignment alignment) {
-		return {
-			CalcAlignmentX(containerSize.x, itemSize.x, alignment),
-			CalcAlignmentY(containerSize.y, itemSize.y, alignment),
-		};
-	}
 }

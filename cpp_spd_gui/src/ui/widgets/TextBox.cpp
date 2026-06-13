@@ -1,7 +1,9 @@
 #include "pch.h"
 #include <core/event_dispatcher.h>
 #include <ui/widgets/TextBox.h>
+#include <ui/fx/Animator.h>
 #include <utils/imgui_utils.h>
+#include <utils/widget_draw.h>
 
 #include <imgui/imgui_internal.h>
 
@@ -30,64 +32,40 @@ namespace spd::ui {
     }
 
     void TextBox::OnRender() {
-        ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
+		ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
         bool isHovered = ImGui::IsMouseHoveringRect(borderPos, { borderPos.x + boxSize.x, borderPos.y + boxSize.y });
+        bool isActive  = (ImGui::GetActiveID() == ImGui::GetID(m_id));
 
-        // check if this widget is focused
-        bool isActive = (ImGui::GetActiveID() == ImGui::GetID(m_id.c_str()));
+        // background
+        utils::DrawAnimatedRect(
+            this, m_id, borderPos, boxSize, isHovered, isActive,
+            &Style::bgColor, &Style::hoverColor, &Style::activeColor,
+            ImGuiCol_FrameBg, ImGuiCol_FrameBgHovered, ImGuiCol_FrameBgActive
+        );
 
-        // resolve colors
-        ImVec4 imguiFrameColor = utils::GetDefaultImGuiColor(ImGuiCol_FrameBg);
-        Color frameColor = ResolveStyle(&Style::bgColor, IMVEC4_TO_COLOR(imguiFrameColor)); // default imgui textbox bg color
-
-        if (isActive) {
-            const ImVec4& imguiFrameActive = utils::GetDefaultImGuiColor(ImGuiCol_FrameBgActive);
-            frameColor = ResolveStyle(&Style::activeColor, IMVEC4_TO_COLOR(imguiFrameActive));
-        }
-        else if (isHovered) {
-            const ImVec4& imguiFrameHovered = utils::GetDefaultImGuiColor(ImGuiCol_FrameBgHovered);
-            frameColor = ResolveStyle(&Style::hoverColor, IMVEC4_TO_COLOR(imguiFrameHovered));
-        }
-
-        // inherit text color from parent
-        std::optional<Color> textColor = std::nullopt;
-        if (ResolveStyle(&Style::textColor, {}).imu32 != Color().imu32) { // no default
-            textColor = ResolveStyle(&Style::textColor, {});
-        }
-
-        // draw custom background exactly to box model dimensions
-        ImDrawList* drawList = ImGui::GetWindowDrawList();
-        float rounding = m_style.rounding.value_or(0.0f);
-        drawList->AddRectFilled(borderPos, { borderPos.x + boxSize.x, borderPos.y + boxSize.y }, frameColor.imu32, rounding);
-
-        // position the internal text slightly offset by box model padding
+        // text
         ImGui::SetCursorPos(borderPos);
-
-        // strip imgui of its styling so it acts only as a text renderer
         const Offsets& padding = m_style.padding.value_or(Offsets::ZERO);
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(padding.top, padding.left)); // kill imgui double padding
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, 0); // transparent background
+        
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(padding.top, padding.left));
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, 0); 
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, 0);
         ImGui::PushStyleColor(ImGuiCol_FrameBgActive, 0);
-        if (textColor.has_value()) ImGui::PushStyleColor(ImGuiCol_Text, textColor.value().imu32);
-
-        // force the invisible imgui input frame to match our exact content width
+        
+        bool textPushed = utils::PushTextColor(this);
         ImGui::PushItemWidth(boxSize.x);
 
-        ImGuiInputTextFlags flags = 0;
-        if (m_isPassword) flags |= ImGuiInputTextFlags_Password;
-
-        // render the raw imgui text input
-        bool changed = ImGui::InputTextWithHint(m_id.c_str(), m_placeholder.c_str(), m_buffer, sizeof(m_buffer), flags);
+        ImGuiInputTextFlags flags = m_isPassword ? ImGuiInputTextFlags_Password : 0;
+        bool changed = ImGui::InputTextWithHint(m_id, m_placeholder.c_str(), m_buffer, sizeof(m_buffer), flags);
 
         ImGui::PopItemWidth();
-        if (textColor.has_value()) ImGui::PopStyleColor(); // pop text color if set
+        utils::PopTextColor(textPushed);
         ImGui::PopStyleColor(3);
         ImGui::PopStyleVar();
 
-        // text changed callback
+        // event handling
         if (changed && m_onChangeCallback) {
             core::event_dispatcher::Defer(m_onChangeCallback, std::string(m_buffer));
         }

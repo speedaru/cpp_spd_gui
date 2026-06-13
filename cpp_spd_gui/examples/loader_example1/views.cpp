@@ -25,13 +25,15 @@ namespace views {
         auto rootScene = ui::MakeVbox();
         rootScene->SetTag("root_scene");
         rootScene->m_style
-            .SetFont(assets::quicksand.Get(18.f));
+            .SetFont(assets::quicksand.Get(18.f))
+            .SetAnimationSpeed(10.f)
+            .SetBorderColor({ 255, 205, 155, 60 }).SetBorderThickness(1.f);
 
         // ==========================================================
         // 1. GLOBAL TOP NAVIGATION BAR
         // ==========================================================
         auto navBar = rootScene->Add(ui::MakeNavBar());
-        navBar->m_style.SetPadding({ 6.f }).SetSpacing(10.f);
+        navBar->m_style.SetPadding({ 6.f }).SetSpacing(10.f).SetRounding(2.f);
         navBar->AddTitle("Temp Spoofer Loader");
         navBar->SetNavButtonSize({ 20.f, 0.f });
         navBar->AddMinButton([&app]() { app.Minimize(); });
@@ -77,8 +79,8 @@ namespace views {
         licenseInput->SetText("valid-key-123");
         licenseInput->m_style
             .SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true)
-            .SetBgColor({ 25, 25, 25, 255 }).SetHoverColor({ 35, 35, 35, 255 }).SetActiveColor({ 45, 45, 45, 255 })
-            .SetBorder({ .color = { 100, 100, 100, 255 }, .thickness = 1.f });
+            //.SetBgColor({ 25, 25, 25, 255 }).SetHoverColor({ 35, 35, 35, 255 }).SetActiveColor({ 45, 45, 45, 255 })
+            .SetBorderThickness(1.f);
 
         // Submission Button Action Node
         auto loginButton = loginForm->Add(ui::MakeButton("Login", "btn_login"));
@@ -137,7 +139,7 @@ namespace views {
                 ->m_style
 					.SetRounding(8.f)
 					.SetFont(assets::quicksand.Get(32.f))
-					.SetBorder({ .color = { 255, 155, 105, 255 }, .thickness = 2.f });
+					.SetBorderColor({ 255, 155, 105, 255 }).SetBorderThickness(2.f);
 		};
         
         makeNavButton("H", [tabDeck]() { tabDeck->SwitchTo("home_tab"); });

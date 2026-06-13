@@ -3,13 +3,7 @@
 
 namespace spd::ui {
     void FlexBox::Update() {
-        LOG_T("[MEASURE] ---> Entering FlexBox (%s) Update\n", m_tag);
-
         Container::Update(); // calc children and self content size
-
-        LOG_T("[MEASURE] (%s) Natural Content Area: Size(%.1f, %.1f)\n",
-            m_tag, m_boxModel.contentSize.x, m_boxModel.contentSize.y);
-
         CalculateFlex(); // grow + recalc size
     }
 
@@ -134,9 +128,6 @@ namespace spd::ui {
                     if (axis.GetMainGrow(child->m_style)) {
                         Offsets childMargin = child->m_style.margin.value_or(Offsets::ZERO);
                         float targetMain = extraPerChild - axis.GetMainTotal(childMargin);
-
-                        LOG_T("[FLEX] Stretched Main-Axis child (%s) inside parent (%s) to Width/Height: %.1f\n",
-                            child->m_tag, this->m_tag, targetMain);
 
                         ImVec2 newBaseSize = child->GetBoxSize();
                         axis.SetMain(newBaseSize, targetMain);

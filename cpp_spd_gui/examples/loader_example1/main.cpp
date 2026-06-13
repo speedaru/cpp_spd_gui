@@ -17,6 +17,10 @@ static void SetupImGui(ImGuiIO& io) {
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_WindowBg] = ImVec4(0.098f, 0.098f, 0.098f, 1.f);
 
+	constexpr Color borderColor = { 255, 45, 21, 185 };
+	colors[ImGuiCol_Border] = COLOR_TO_IMVEC4(borderColor);
+
+	colors[ImGuiCol_Border] = utils::GetDefaultImGuiColor(ImGuiCol_Border);
 	colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 0.41f, 0.04f, 0.40f);
 	colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 0.41f, 0.04f, 0.67f);
 	colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 0.41f, 0.04f, 1.00f);

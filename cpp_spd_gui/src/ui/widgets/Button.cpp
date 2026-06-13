@@ -1,7 +1,11 @@
 #include "pch.h"
 #include <core/event_dispatcher.h>
+
 #include <ui/widgets/Button.h>
+#include <ui/fx/Animator.h>
+
 #include <utils/imgui_utils.h>
+#include <utils/widget_draw.h>
 
 namespace spd::ui {
     Button* spd::ui::Button::OnClick(std::function<void()> callback) {
@@ -14,61 +18,32 @@ namespace spd::ui {
 	}
 
     void Button::OnRender() {
-        ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
+		ImVec2 borderPos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
 
-		// invisible imgui button for click detection
-		ImGui::SetCursorPos(borderPos);
-		bool pressed = ImGui::InvisibleButton(m_id.c_str(), boxSize);
-
-        // defer click callback
-		if (pressed && m_onClickCallback) {
+        // handle event capture
+        ImGui::SetCursorPos(borderPos);
+        if (ImGui::InvisibleButton(m_id, boxSize) && m_onClickCallback) {
             core::event_dispatcher::Defer(m_onClickCallback);
-		}
-
-        // interaction state
-        bool isHovered = ImGui::IsItemHovered();
-        bool isActive = ImGui::IsItemActive(); // mouse held down
-
-        // resolve background color
-        ImVec4 imguiButtonColor = utils::GetDefaultImGuiColor(ImGuiCol_Button);
-        Color bgColor = ResolveStyle(&Style::bgColor, IMVEC4_TO_COLOR(imguiButtonColor)); // default imgui button color
-
-        // use default imgui colors if no styles specified
-        if (isActive) {
-            const ImVec4& imguiButtonActive = utils::GetDefaultImGuiColor(ImGuiCol_ButtonActive);
-            bgColor = ResolveStyle(&Style::activeColor, IMVEC4_TO_COLOR(imguiButtonActive));
-        }
-        else if (isHovered) {
-            const ImVec4& imguiButtonHovered = utils::GetDefaultImGuiColor(ImGuiCol_ButtonHovered);
-            bgColor = ResolveStyle(&Style::hoverColor, IMVEC4_TO_COLOR(imguiButtonHovered));
         }
 
-        // draw backgrond
-        ImDrawList* drawList = ImGui::GetWindowDrawList();
-        float rounding = ResolveStyle(&Style::rounding, 0.0f);
+        // background drawing
+        utils::DrawAnimatedRect(
+            this, m_id, borderPos, boxSize, ImGui::IsItemHovered(), ImGui::IsItemActive(),
+            &Style::bgColor, &Style::hoverColor, &Style::activeColor,
+            ImGuiCol_Button, ImGuiCol_ButtonHovered, ImGuiCol_ButtonActive
+        );
 
-        ImVec2 screenPos = ImGui::GetItemRectMin();
-        drawList->AddRectFilled(screenPos, { screenPos.x + boxSize.x, screenPos.y + boxSize.y }, bgColor.imu32, rounding);
-
-        // draw text (centered inside button)
+        // text drawing
         ImVec2 textSize = ImGui::CalcTextSize(m_text.c_str());
         ImVec2 textPos = {
             borderPos.x + (boxSize.x - textSize.x) * 0.5f,
             borderPos.y + (boxSize.y - textSize.y) * 0.5f
         };
 
-        // text color
-        std::optional<Color> textColor = std::nullopt;
-        if (ResolveStyle(&Style::textColor, {}).imu32 != Color().imu32) { // no default
-            textColor = ResolveStyle(&Style::textColor, {});
-        }
-
-        if (textColor.has_value()) ImGui::PushStyleColor(ImGuiCol_Text, textColor.value().imu32);
-        
+        bool textPushed = utils::PushTextColor(this);
         ImGui::SetCursorPos(textPos);
         ImGui::TextUnformatted(m_text.c_str());
-
-        if (textColor.has_value()) ImGui::PopStyleColor();
+        utils::PopTextColor(textPushed);
 	}
 }

@@ -105,7 +105,7 @@ namespace spd::core {
             if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
-            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
 
@@ -231,7 +231,7 @@ namespace spd::core {
             spd::core::event_dispatcher::Flush();
 
             //LOG_D("memory usage: %llu bytes, total allocated (%llu)\n", GetBytesAllocated(), g_totalAllocated);
-            LOG_T("frame %d: --------------------------------------------------\n", frameCounter++);
+            //LOG_T("frame %d: --------------------------------------------------\n", frameCounter++);
 		}
 
         ImGui::End();

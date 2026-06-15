@@ -99,13 +99,18 @@ namespace spd::core {
         m_root = std::move(rootWidget);
     }
 
-    void Application::Run() {
+    void Application::Run(std::chrono::milliseconds frameDelay) {
         while (m_isRunning) {
             StartRender();
             if (!m_isRunning) break; // pressed quit
             Render();
             EndRender();
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+            // add delay if not zero
+            static constexpr const auto noDelay = std::chrono::milliseconds(0);
+            if (frameDelay > noDelay) {
+				std::this_thread::sleep_for(frameDelay);
+            }
         }
     }
 

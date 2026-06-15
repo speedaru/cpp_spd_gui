@@ -28,7 +28,7 @@ namespace spd::core {
 		void SetRoot(std::unique_ptr<ui::Container> rootWidget);
 
 		// frameDelay: pause in ms between each frame
-		void Run(std::chrono::milliseconds frameDelay);
+		void Run(std::chrono::milliseconds frameDelay = std::chrono::milliseconds(0));
 		void Minimize();
 		void Close();
 

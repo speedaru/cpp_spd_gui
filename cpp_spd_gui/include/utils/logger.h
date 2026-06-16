@@ -1,6 +1,9 @@
 #pragma once
 #include <cassert>
 
+// Enable/disable custom allocation hooking (set to 0 to use standard allocators)
+#define SPD_ENABLE_TRACKED_ALLOC 0
+
 // macros
 #define SPD_ASSERT(cond) assert(cond)
 #define __RELATIVE_FILE__ (__FILE__ + sizeof(PROJECT_DIR "src\\") - 1)
@@ -24,8 +27,15 @@ namespace spd {
 	void TrackedFree(void* ptr, const char* file, int line);
 }
 
-#define SPD_ALLOC(T, count) spd::TrackedAlloc<T>(count, __RELATIVE_FILE__, __LINE__)
-#define SPD_FREE(ptr) spd::TrackedFree(ptr, __RELATIVE_FILE__, __LINE__)
+// Allocation macros: use tracked or standard based on SPD_ENABLE_TRACKED_ALLOC
+#if SPD_ENABLE_TRACKED_ALLOC
+	#define SPD_ALLOC(T, count) spd::TrackedAlloc<T>(count, __RELATIVE_FILE__, __LINE__)
+	#define SPD_FREE(ptr) spd::TrackedFree(ptr, __RELATIVE_FILE__, __LINE__)
+#else
+	// Use standard allocators to avoid conflicts with third-party libs (OpenCV, ONNX Runtime, etc.)
+	#define SPD_ALLOC(T, count) new T[count]
+	#define SPD_FREE(ptr) delete[] ptr
+#endif
 
 namespace logging {
 	enum class LogLevel {

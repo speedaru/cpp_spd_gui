@@ -1,7 +1,7 @@
 #pragma once
 #include <cassert>
 
-// Enable/disable custom allocation hooking (set to 0 to use standard allocators)
+// enable/disable custom allocation hooking
 #define SPD_ENABLE_TRACKED_ALLOC 0
 
 // macros
@@ -39,12 +39,13 @@ namespace spd {
 
 namespace logging {
 	enum class LogLevel {
-		None = 0x0,
-		Trace = 0x1,
-		Debug = 0x2,
-		Info = 0x4,
-		Warn = 0x8,
-		Error = 0x10
+		None  = 0x00,
+		Trace = 0x01,
+		Debug = 0x02,
+		Info  = 0x04,
+		Warn  = 0x08,
+		Error = 0x10,
+		Perf  = 0x20,
 	};
 
 	inline LogLevel operator|(LogLevel a, LogLevel b) { return static_cast<LogLevel>((unsigned int)a | (unsigned int)b); }
@@ -73,9 +74,10 @@ namespace logging {
 
 	#define LOG_T(...) LogOutput(logging::LogLevel::Trace, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
 	#define LOG_D(...) LogOutput(logging::LogLevel::Debug, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
-	#define LOG_I(...) LogOutput(logging::LogLevel::Info,  __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
-	#define LOG_W(...) LogOutput(logging::LogLevel::Warn,  __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
+	#define LOG_I(...) LogOutput(logging::LogLevel::Info, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
+	#define LOG_W(...) LogOutput(logging::LogLevel::Warn, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
 	#define LOG_E(...) LogOutput(logging::LogLevel::Error, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
+	#define LOG_P(...) LogOutput(logging::LogLevel::Perf, __RELATIVE_FILE__, __LINE__, __func__, __VA_ARGS__)
 
 	#define LOG_OBJ(level, fmt, ...) LogOutput(level, __RELATIVE_FILE__, __LINE__, __func__, \
 										"[%s:0x%p] " fmt, this->m_tag, this, ##__VA_ARGS__)

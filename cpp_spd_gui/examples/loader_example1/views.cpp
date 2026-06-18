@@ -6,6 +6,7 @@
 #include <ui/widgets/TextBox.h>
 #include <ui/widgets/Spacer.h>
 #include <ui/widgets/NavBar.h>
+#include <ui/widgets/Slider.h>
 
 #include <ui/layouts/ViewSwitcher.h>
 #include <ui/layouts/Hbox.h>
@@ -16,7 +17,9 @@ namespace views {
 
     // Forward declaring our localized view builders to keep the code organized
     static std::unique_ptr<ui::Widget> BuildLoginPanel(ui::ViewSwitcher* masterDeck);
-    static std::unique_ptr<ui::Widget> BuildDashboardPanel(core::Application& app);
+    static std::unique_ptr<ui::Widget> BuildDashboardPanel(ui::ViewSwitcher* masterDeck);
+
+    static std::unique_ptr<ui::Widget> BuildB1Tab(ui::ViewSwitcher* masterDeck);
 
     static void HandleLoginButton(ui::TextBox* licenseInput, ui::Label* statusLabel, ui::ViewSwitcher* masterDeck);
 
@@ -48,7 +51,7 @@ namespace views {
 
         // Register our separate screens smoothly into the primary state controller
         masterDeck->AddView("login_screen", BuildLoginPanel(masterDeck));
-        masterDeck->AddView("main_dashboard", BuildDashboardPanel(app));
+        masterDeck->AddView("main_dashboard", BuildDashboardPanel(masterDeck));
 
         return rootScene;
     }
@@ -64,7 +67,9 @@ namespace views {
         loginForm->m_style
             .SetAlignment(ui::Alignment::Center)
             .SetMargin({ 0.f, 0.f, 80.f, 0.f }) // Keeps your exact original centering layout offset
-            .SetFont(assets::quicksand.Get(18.f));
+            .SetFont(assets::quicksand.Get(18.f))
+            .SetBorderColor({ 255, 0, 0, 255 })
+            .SetBorderThickness(0.f);
 
         // Form Title text
         loginForm->Add(ui::MakeLabel("FasterPeak Loader", "login_header_label"))
@@ -82,11 +87,11 @@ namespace views {
             //.SetBgColor({ 25, 25, 25, 255 }).SetHoverColor({ 35, 35, 35, 255 }).SetActiveColor({ 45, 45, 45, 255 })
             .SetBorderThickness(1.f);
 
-        // Submission Button Action Node
+        // submission button action node
         auto loginButton = loginForm->Add(ui::MakeButton("Login", "btn_login"));
         loginButton->m_style.SetMargin({ 0.f, 8.f }).SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true);
 
-        // Status Feedback String (Instantly capture raw pointer on allocation!)
+        // status feedback string (instantly capture raw pointer on allocation!)
         auto statusLabel = loginForm->Add(ui::MakeLabel("", "status_label"));
         statusLabel->m_style.SetPadding({ 6.f }).SetFont(assets::quicksand.Get(14.f));
 
@@ -95,7 +100,7 @@ namespace views {
         return loginForm;
     }
 
-    static std::unique_ptr<ui::Widget> BuildDashboardPanel(core::Application& app) {
+    static std::unique_ptr<ui::Widget> BuildDashboardPanel(ui::ViewSwitcher* masterDeck) {
         auto dashboardWorkspace = ui::MakeHbox();
         dashboardWorkspace->SetTag("dashboard_workspace_hbox");
         dashboardWorkspace->m_style.SetHgrow(true).SetVgrow(true).SetAlignment(ui::Alignment::TopLeft);
@@ -122,8 +127,7 @@ namespace views {
         auto homeTab = tabDeck->AddView("home_tab", ui::MakeVbox());
         homeTab->Add(ui::MakeLabel("FasterPeak Spoofer", "main_label_home"));
 
-        auto b1Tab = tabDeck->AddView("b1_tab", ui::MakeVbox());
-        b1Tab->Add(ui::MakeLabel("B1 tab", "main_label_b1"));
+        auto b1Tab = tabDeck->AddView("b1_tab", std::move(BuildB1Tab(masterDeck)));
 
         auto b2Tab = tabDeck->AddView("b2_tab", ui::MakeVbox());
         b2Tab->Add(ui::MakeLabel("B2 tab", "main_label_b2"));
@@ -148,6 +152,48 @@ namespace views {
 
         return dashboardWorkspace;
     }
+
+    std::unique_ptr<ui::Widget> BuildB1Tab(ui::ViewSwitcher* masterDeck) {
+        auto createSlider = [](const std::string& title, float min, float max) -> std::unique_ptr<ui::Widget> {
+            auto container = ui::MakeVbox();
+            container->SetTag("slider_container");
+            container->SetBaseSize({ 300.f, 0.f });
+            container->m_style
+                .SetSpacing(6.f)
+                .SetBorderColor({ 0, 255, 0, 255 })
+                .SetBorderThickness(0.f);
+
+            // add title
+            container->Add(ui::MakeLabel(title, "slider_title"))
+			->m_style
+				.SetAlignment(ui::Alignment::Left);
+
+            // create slider
+            container->Add(ui::MakeSlider(min, max))
+			->m_style
+                .SetPadding({ 0.f, 3.f })
+                .SetHgrow(true);
+
+            return std::move(container);
+		};
+
+        auto slidersContainer = ui::MakeVbox();
+        slidersContainer->SetTag("b1_tab");
+        slidersContainer->m_style
+            .SetAlignment(ui::Alignment::Top)
+            .SetMargin({ 0.f, 20.f })
+            .SetSpacing(12.f)
+            .SetPadding({ 8.f })
+			.SetRounding(4.f)
+			.SetBorderColor({ 0, 0, 255, 255 })
+			.SetBorderThickness(0.f);
+
+        slidersContainer->Add(createSlider("aim smoothness", 0.f, 3.f));
+        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f));
+
+        return std::move(slidersContainer);
+    }
+
 
     void HandleLoginButton(ui::TextBox* licenseInput, ui::Label* statusLabel, ui::ViewSwitcher* masterDeck) {
 		std::string key = licenseInput->GetText();

@@ -8,8 +8,16 @@
 #include <imgui/imgui_internal.h>
 
 namespace spd::ui {
-	Slider::Slider(float minValue, float maxValue, const char* tag)
+	Slider::Slider(float minValue, float maxValue, float step, const char* tag)
 		: m_minValue(minValue), m_maxValue(maxValue), m_value(minValue) {
+		// convert step to string format precision
+		int decimalPlaces = 0;
+		while (step < 1.f) {
+			decimalPlaces++;
+			step *= 10.f;
+		}
+		snprintf(m_stepFmt, sizeof(m_stepFmt) - 1, "%%.%df", decimalPlaces);
+
 		m_tag = tag;
 	}
 
@@ -60,7 +68,7 @@ namespace spd::ui {
 
 		// draw slider
 		float prevValue = m_value;
-		ImGui::SliderFloat(m_id, &m_value, m_minValue, m_maxValue, "%.1f");
+		ImGui::SliderFloat(m_id, &m_value, m_minValue, m_maxValue, m_stepFmt);
 		m_value = std::clamp(m_value, m_minValue, m_maxValue);
 
 		ImGui::PopItemWidth();

@@ -7,7 +7,7 @@ namespace spd::ui {
 	public:
 		static constexpr const char* DEFAULT_TAG = "unnamed slider";
 
-		Slider(float minValue = 0.0f, float maxValue = 100.0f, const char* tag = DEFAULT_TAG);
+		Slider(float minValue = 0.0f, float maxValue = 100.0f, float step = 1.f, const char* tag = DEFAULT_TAG);
 
 		// callback setter
 		Slider* OnChange(std::function<void(float)> callback);
@@ -27,9 +27,10 @@ namespace spd::ui {
 		void OnRender() override;
 
 	private:
-		float m_value = 0.0f;
-		float m_minValue = 0.0f;
-		float m_maxValue = 100.0f;
+		float m_value;
+		float m_minValue;
+		float m_maxValue;
+		char m_stepFmt[8]{ 0 }; // step in %.f string format
 		std::function<void(float)> m_onChangeCallback = nullptr;
 	};
 

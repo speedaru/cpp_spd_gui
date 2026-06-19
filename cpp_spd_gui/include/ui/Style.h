@@ -36,7 +36,7 @@ namespace spd::ui {
 		ADD_FIELD(Color, frameBgColor, SetFrameBgColor);
 		ADD_FIELD(float, frameRounding, SetFrameRounding);
 
-		// buttons and widgets
+		// widgets
 		ADD_FIELD(Color, bgColor, SetBgColor);
 		ADD_FIELD(float, rounding, SetRounding);
 		ADD_FIELD(Color, borderColor, SetBorderColor);

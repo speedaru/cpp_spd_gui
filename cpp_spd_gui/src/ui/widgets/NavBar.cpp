@@ -78,10 +78,10 @@ namespace spd::ui {
         ImDrawList* draw = ImGui::GetWindowDrawList();
         ImVec2 pos = m_boxModel.CalcBoxPosition(m_position);
         ImVec2 boxSize = m_boxModel.boxSize;
-        float rounding = m_style.frameRounding.value_or(0.f);
+        float frameRounding = m_style.frameRounding.value_or(0.f);
 
         // draw background
-        draw->AddRectFilled(pos, pos + boxSize, resolvedColor.imu32, rounding);
+        draw->AddRectFilled(pos, pos + boxSize, resolvedColor.imu32, frameRounding);
     }
 
 }

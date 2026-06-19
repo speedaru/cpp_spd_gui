@@ -36,8 +36,8 @@ namespace spd::utils {
         float targetRounding = widget->ResolveStyle(&ui::Style::rounding, 0.0f);
 
         // animation
-        bool animationsEnabled = widget->ResolveStyle(&ui::Style::enableAnimations, true);
-        float animSpeed = widget->ResolveStyle(&ui::Style::animationSpeed, 12.0f);
+        bool animationsEnabled = widget->ResolveStyle(&ui::Style::enableAnimations, ui::Style::DEFAULT_ENABLE_ANIMATIONS);
+        float animSpeed = widget->ResolveStyle(&ui::Style::animationSpeed, ui::Style::DEFAULT_ANIMATION_SPEED);
 
         Color finalColor;
         float finalRounding;
@@ -46,7 +46,8 @@ namespace spd::utils {
             ImGuiID numericId = ImGui::GetID(widgetId);
             finalColor = fx::AnimateColor(numericId, "rect_bg", targetColor, animSpeed);
             finalRounding = targetRounding;
-        } else {
+        }
+        else {
             finalColor = targetColor;
             finalRounding = targetRounding;
         }

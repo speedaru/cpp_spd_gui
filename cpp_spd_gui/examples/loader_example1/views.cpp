@@ -154,7 +154,7 @@ namespace views {
     }
 
     std::unique_ptr<ui::Widget> BuildB1Tab(ui::ViewSwitcher* masterDeck) {
-        auto createSlider = [](const std::string& title, float min, float max) -> std::unique_ptr<ui::Widget> {
+        auto createSlider = [](const std::string& title, float min, float max, float step) -> std::unique_ptr<ui::Widget> {
             auto container = ui::MakeVbox();
             container->SetTag("slider_container");
             container->SetBaseSize({ 300.f, 0.f });
@@ -169,7 +169,7 @@ namespace views {
 				.SetAlignment(ui::Alignment::Left);
 
             // create slider
-            container->Add(ui::MakeSlider(min, max))
+            container->Add(ui::MakeSlider(min, max, step))
 			->m_style
                 .SetPadding({ 0.f, 3.f })
                 .SetHgrow(true);
@@ -188,8 +188,8 @@ namespace views {
 			.SetBorderColor({ 0, 0, 255, 255 })
 			.SetBorderThickness(0.f);
 
-        slidersContainer->Add(createSlider("aim smoothness", 0.f, 3.f));
-        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f));
+        slidersContainer->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
+        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.01f));
 
         return std::move(slidersContainer);
     }

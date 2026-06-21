@@ -8,7 +8,7 @@ namespace spd::ui {
 
         TextBox(const std::string& placeholder = "", const char* tag = DEFAULT_TAG);
 
-        TextBox* OnChange(std::function<void(TextBox*)> callback);
+        TextBox* OnChange(std::function<void(ImGuiInputTextCallbackData* data)> callback);
         TextBox* SetPassword(bool isPassword) { m_isPassword = isPassword; return this; }
 
         std::string GetText() const;
@@ -25,7 +25,7 @@ namespace spd::ui {
         char m_buffer[256] = { 0 };
         std::string m_placeholder;
         bool m_isPassword = false;
-        std::function<void(TextBox*)> m_onChangeCallback = nullptr;
+        std::function<void(ImGuiInputTextCallbackData*)> m_onChangeCallback = nullptr;
 	};
 
     template <typename... Args>

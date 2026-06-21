@@ -13,7 +13,7 @@ namespace spd::ui {
         m_tag = tag;
     }
 
-    TextBox* TextBox::OnChange(std::function<void(TextBox*)> callback) {
+    TextBox* TextBox::OnChange(std::function<void(ImGuiInputTextCallbackData*)> callback) {
         m_onChangeCallback = callback;
         return this;
     }
@@ -76,7 +76,7 @@ namespace spd::ui {
         auto* textbox = static_cast<TextBox*>(data->UserData);
 
         if (textbox->m_onChangeCallback) {
-            textbox->m_onChangeCallback(textbox);
+            textbox->m_onChangeCallback(data);
         }
 
         return 0;

@@ -13,7 +13,7 @@ namespace spd::ui {
         m_tag = tag;
     }
 
-    TextBox* TextBox::OnChange(std::function<void(ImGuiInputTextCallbackData*)> callback) {
+    TextBox* TextBox::OnChange(std::function<void(TextBox*)> callback) {
         m_onChangeCallback = callback;
         return this;
     }
@@ -58,7 +58,7 @@ namespace spd::ui {
         ImGui::PushItemWidth(boxSize.x);
 
         ImGuiInputTextFlags flags = m_isPassword ? ImGuiInputTextFlags_Password : 0;
-        printf("buffer: %s\n", m_buffer);
+        flags |= ImGuiInputTextFlags_CallbackEdit;
         ImGui::InputTextWithHint(m_id, m_placeholder.c_str(), m_buffer, sizeof(m_buffer), flags, TextBoxCallback, this);
 
         ImGui::PopItemWidth();
@@ -75,8 +75,9 @@ namespace spd::ui {
     int TextBox::TextBoxCallback(ImGuiInputTextCallbackData* data) {
         auto* textbox = static_cast<TextBox*>(data->UserData);
 
-        if (textbox->m_onChangeCallback)
-            textbox->m_onChangeCallback(data);
+        if (textbox->m_onChangeCallback) {
+            textbox->m_onChangeCallback(textbox);
+        }
 
         return 0;
     }

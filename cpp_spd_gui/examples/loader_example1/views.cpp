@@ -189,7 +189,8 @@ namespace views {
 			.SetBorderThickness(0.f);
 
         slidersContainer->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
-        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.01f));
+        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.1f));
+        slidersContainer->Add(createSlider("AI sensitivity 2", 0.f, 3.f, 0.01f));
 
         return std::move(slidersContainer);
     }

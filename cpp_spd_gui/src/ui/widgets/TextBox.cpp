@@ -13,7 +13,7 @@ namespace spd::ui {
         m_tag = tag;
     }
 
-    TextBox* TextBox::OnChange(std::function<void(const std::string&)> callback) {
+    TextBox* TextBox::OnChange(std::function<void(ImGuiInputTextCallbackData*)> callback) {
         m_onChangeCallback = callback;
         return this;
     }
@@ -58,17 +58,51 @@ namespace spd::ui {
         ImGui::PushItemWidth(boxSize.x);
 
         ImGuiInputTextFlags flags = m_isPassword ? ImGuiInputTextFlags_Password : 0;
-        bool changed = ImGui::InputTextWithHint(m_id, m_placeholder.c_str(), m_buffer, sizeof(m_buffer), flags);
+        printf("buffer: %s\n", m_buffer);
+        ImGui::InputTextWithHint(m_id, m_placeholder.c_str(), m_buffer, sizeof(m_buffer), flags, TextBoxCallback, this);
 
         ImGui::PopItemWidth();
         utils::PopTextColor(textPushed);
         ImGui::PopStyleColor(3);
         ImGui::PopStyleVar();
 
-        // event handling
-        if (changed && m_onChangeCallback) {
-            core::event_dispatcher::Defer(m_onChangeCallback, std::string(m_buffer));
+        //// event handling
+        //if (IsTextChanged() && m_onChangeCallback) {
+        //    core::event_dispatcher::Defer(m_onChangeCallback, std::string(m_buffer));
+        //}
+    }
+
+    int TextBox::TextBoxCallback(ImGuiInputTextCallbackData* data) {
+        auto* textbox = static_cast<TextBox*>(data->UserData);
+
+        if (textbox->m_onChangeCallback)
+            textbox->m_onChangeCallback(data);
+
+        return 0;
+    }
+
+    bool TextBox::IsTextChanged() {
+        static char previousText[sizeof(m_buffer)]{0};
+        bool res = false;
+
+        size_t lenBuff = strlen(m_buffer);
+        assert(lenBuff < sizeof(m_buffer));
+
+        // different text len means edited
+        if (strlen(previousText) != strlen(m_buffer)) {
+            res = true;
+            goto end;
         }
+
+        // same strlen, compare buffs
+		// only compare text
+        res = !memcmp(previousText, m_buffer, lenBuff);
+
+        // save previous text
+        end:
+        memcpy(previousText, m_buffer, lenBuff);
+        previousText[lenBuff] = '\0'; // add null terminator
+        return res;
     }
 
     std::string TextBox::GetText() const { return std::string(m_buffer); }

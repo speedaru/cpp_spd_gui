@@ -12,7 +12,7 @@ namespace spd::ui {
 		: m_minValue(minValue), m_maxValue(maxValue), m_value(minValue) {
 		// convert step to string format precision
 		int decimalPlaces = 0;
-		while (step < 1.f) {
+		while (step < 0.9999f) {
 			decimalPlaces++;
 			step *= 10.f;
 		}

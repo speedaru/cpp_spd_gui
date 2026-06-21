@@ -86,11 +86,6 @@ namespace views {
             .SetPadding({ 8.f }).SetRounding(4.f).SetHgrow(true)
             //.SetBgColor({ 25, 25, 25, 255 }).SetHoverColor({ 35, 35, 35, 255 }).SetActiveColor({ 45, 45, 45, 255 })
             .SetBorderThickness(1.f);
-        licenseInput->OnChange([](ui::TextBox* textbox) {
-			std::string text = textbox->GetText();
-			textbox->SetText("nigga");
-            printf("changed text\n");
-		});
 
         // submission button action node
         auto loginButton = loginForm->Add(ui::MakeButton("Login", "btn_login"));

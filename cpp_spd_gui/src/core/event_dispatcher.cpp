@@ -13,6 +13,7 @@ namespace spd::core::event_dispatcher {
 			g_eventQueue[i]();
 		}
 
-		g_eventQueue.clear();
+		// clear only handled events, keep newly defered events
+		g_eventQueue.erase(g_eventQueue.begin(), g_eventQueue.begin() + eventCount);
 	}
 };

@@ -67,14 +67,12 @@ namespace spd::ui {
 
 		// start listening on click
 		if (clicked && !m_isListening) {
-			auto fn = &HotkeySelector::StartListening;
-			core::event_dispatcher::Defer([fn, this]() { (this->*fn)(); });
+			core::event_dispatcher::Defer([this]() { StartListening(); });
 		}
 
 		// capture key input while listening
 		if (m_isListening) {
-			auto fn = &HotkeySelector::CaptureInput;
-			core::event_dispatcher::Defer([fn, this]() { (this->*fn)(); });
+			core::event_dispatcher::Defer([this]() { CaptureInput(); });
 		}
 
 		// background drawing
@@ -140,7 +138,7 @@ namespace spd::ui {
 		};
 
 		// check first if cancel key pressed
-		if ((GetAsyncKeyState(m_cancelKeyCode) & 0x8000)) {
+		if (GetAsyncKeyState(m_cancelKeyCode) & 0x8000) {
 			StopListeningInternal();
 			return;
 		}

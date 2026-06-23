@@ -204,6 +204,10 @@ namespace views {
         selector->m_style
             .SetPadding(8.f);
 
+        selector->OnKeyChanged([](uint32_t newKey) {
+            LOG_D("new keycode: %u\n", newKey);
+		});
+
         return std::move(root);
     }
 

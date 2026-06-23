@@ -7,6 +7,7 @@
 #include <ui/widgets/Spacer.h>
 #include <ui/widgets/NavBar.h>
 #include <ui/widgets/Slider.h>
+#include <ui/widgets/HotkeySelector.h>
 
 #include <ui/layouts/ViewSwitcher.h>
 #include <ui/layouts/Hbox.h>
@@ -20,6 +21,7 @@ namespace views {
     static std::unique_ptr<ui::Widget> BuildDashboardPanel(ui::ViewSwitcher* masterDeck);
 
     static std::unique_ptr<ui::Widget> BuildB1Tab(ui::ViewSwitcher* masterDeck);
+    static std::unique_ptr<ui::Widget> BuildB2Tab(ui::ViewSwitcher* masterDeck);
 
     static void HandleLoginButton(ui::TextBox* licenseInput, ui::Label* statusLabel, ui::ViewSwitcher* masterDeck);
 
@@ -129,8 +131,7 @@ namespace views {
 
         auto b1Tab = tabDeck->AddView("b1_tab", std::move(BuildB1Tab(masterDeck)));
 
-        auto b2Tab = tabDeck->AddView("b2_tab", ui::MakeVbox());
-        b2Tab->Add(ui::MakeLabel("B2 tab", "main_label_b2"));
+        auto b2Tab = tabDeck->AddView("b2_tab", std::move(BuildB2Tab(masterDeck)));
 
         // ==========================================
         // 3. SIDEBAR NAVIGATION CONTROLS
@@ -177,9 +178,9 @@ namespace views {
             return std::move(container);
 		};
 
-        auto slidersContainer = ui::MakeVbox();
-        slidersContainer->SetTag("b1_tab");
-        slidersContainer->m_style
+        auto b2_root = ui::MakeVbox();
+        b2_root->SetTag("b1_root");
+        b2_root->m_style
             .SetAlignment(ui::Alignment::Top)
             .SetMargin({ 0.f, 20.f })
             .SetSpacing(12.f)
@@ -188,11 +189,22 @@ namespace views {
 			.SetBorderColor({ 0, 0, 255, 255 })
 			.SetBorderThickness(0.f);
 
-        slidersContainer->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
-        slidersContainer->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.1f));
-        slidersContainer->Add(createSlider("AI sensitivity 2", 0.f, 3.f, 0.01f));
+        b2_root->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
+        b2_root->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.1f));
+        b2_root->Add(createSlider("AI sensitivity 2", 0.f, 3.f, 0.01f));
 
-        return std::move(slidersContainer);
+        return std::move(b2_root);
+    }
+
+    std::unique_ptr<ui::Widget> BuildB2Tab(ui::ViewSwitcher* masterDeck) {
+        auto root = ui::MakeVbox();
+        root->SetTag("b2_root");
+
+        auto selector = root->Add(ui::MakeHotkeySelector("press a key", "hotkey_selector"));
+        selector->m_style
+            .SetPadding(8.f);
+
+        return std::move(root);
     }
 
 

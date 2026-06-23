@@ -183,6 +183,8 @@
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\screen.cpp" />
     <ClCompile Include="src\utils\widget_draw.cpp" />
+    <ClCompile Include="src\utils\keycode_utils.cpp" />
+    <ClCompile Include="src\ui\widgets\HotkeySelector.cpp" />
     <ClCompile Include="vendor\imgui\imgui.cpp" />
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_impl_dx11.cpp" />
@@ -214,7 +216,9 @@
     <ClInclude Include="include\ui\widgets\Slider.h" />
     <ClInclude Include="include\ui\widgets\Spacer.h" />
     <ClInclude Include="include\ui\widgets\TextBox.h" />
+    <ClInclude Include="include\ui\widgets\HotkeySelector.h" />
     <ClInclude Include="include\utils\imgui_utils.h" />
+    <ClInclude Include="include\utils\keycode_utils.h" />
     <ClInclude Include="include\utils\layout_math.h" />
     <ClInclude Include="include\utils\screen.h" />
     <ClInclude Include="include\utils\widget_draw.h" />

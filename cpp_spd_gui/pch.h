@@ -7,6 +7,7 @@
 #include <functional>
 #include <algorithm>
 #include <cassert>
+#include <format>
 
 // data structures
 #include <vector>

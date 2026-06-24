@@ -3,12 +3,12 @@
 #include <ui/widgets/Label.h>
 
 namespace spd::ui {
-	class Button : public Label {
+	class Button : public Widget {
 	public:
         static constexpr const char* DEFAULT_TAG = "unnamed button";
 
-        Button(const std::string& text) : Label(text, DEFAULT_TAG) {}
-        Button(const std::string& text, const char* tag) : Label(text, tag) {}
+        Button(const std::string& text) : m_text(text) { m_tag = DEFAULT_TAG; }
+        Button(const std::string& text, const char* tag) : m_text(text) { m_tag = DEFAULT_TAG; }
 
 		// callback setter
         Button* OnClick(std::function<void()> callback);
@@ -18,6 +18,7 @@ namespace spd::ui {
 		void OnRender() override;
 
 	private:
+        std::string m_text;
         std::function<void()> m_onClickCallback = nullptr;
 	};
 

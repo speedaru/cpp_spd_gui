@@ -200,6 +200,7 @@ namespace views {
         auto root = ui::MakeVbox();
         root->SetTag("b2_root");
 
+        // hotkey selector
         auto selector = root->Add(ui::MakeHotkeySelector("press a key", "hotkey_selector"));
         selector->m_style
             .SetPadding(8.f);
@@ -207,6 +208,8 @@ namespace views {
         selector->OnKeyChanged([](uint32_t newKey) {
             LOG_D("new keycode: %u\n", newKey);
 		});
+
+        // drop down
 
         return std::move(root);
     }

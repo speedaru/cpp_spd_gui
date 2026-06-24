@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 	auto root = std::move(views::CreateMasterLayout(app));
 
 	app.SetRoot(std::move(root));
-	app.Run(std::chrono::milliseconds());
+	app.Run();
 
 	logging::LoggerShutdown();
 }

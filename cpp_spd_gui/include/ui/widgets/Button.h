@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <ui/Widget.h>
 
 namespace spd::ui {
 	class Button : public Widget {

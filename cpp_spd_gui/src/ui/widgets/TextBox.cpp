@@ -106,7 +106,9 @@ namespace spd::ui {
         return res;
     }
 
-    std::string TextBox::GetText() const { return std::string(m_buffer); }
+    std::string TextBox::GetText() const {
+        return std::string(m_buffer);
+    }
 
     void TextBox::SetText(const std::string& text) {
         strncpy_s(m_buffer, sizeof(m_buffer), text.c_str(), _TRUNCATE);

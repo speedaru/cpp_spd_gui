@@ -13,6 +13,14 @@ namespace spd::ui {
 		return this;
 	}
 
+    std::string Button::GetText() const {
+        return m_text;
+    }
+
+    void Button::SetText(const std::string& newText) {
+        m_text = newText;
+    }
+
 	ImVec2 Button::OnCalcSize() {
 		return ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
 	}

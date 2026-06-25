@@ -1,6 +1,5 @@
 #pragma once
 #include <functional>
-#include <ui/widgets/Label.h>
 
 namespace spd::ui {
 	class Button : public Widget {
@@ -12,6 +11,9 @@ namespace spd::ui {
 
 		// callback setter
         Button* OnClick(std::function<void()> callback);
+
+        std::string GetText() const;
+        void SetText(const std::string& newText);
 
 	protected:
 		ImVec2 OnCalcSize() override;

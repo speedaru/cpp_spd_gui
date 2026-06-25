@@ -206,7 +206,10 @@ namespace views {
         // drop down
         auto dropdown = root->Add(ui::MakeDropdown("preview", std::initializer_list<std::string_view>{ "nigga option1", "nigga option2", "nigga option 3" }));
         dropdown->m_style
-            .SetPadding({ 8.f });
+            .SetPadding({ 8.f })
+            .SetRounding(0.f)
+            .SetBorderColor({ 255, 0, 255, 255 })
+            .SetBorderThickness(1.f);
 
         // hotkey selector
         auto selector = root->Add(ui::MakeHotkeySelector("press a key", "hotkey_selector"));

@@ -22,17 +22,20 @@ namespace spd::ui {
 	protected:
 		ImVec2 OnCalcSize() override;
 		void OnRender() override;
+		void RenderBorder() override;
 
 	private:
 		void RenderAnchorField(ImVec2 pos, ImVec2 size, bool isHovered, bool isActive);
 		void RenderChevronIcon(ImVec2 pos, ImVec2 size);
 		void RenderFloatingMenu(ImVec2 anchorPos, ImVec2 anchorSize);
+		float CalculateContentWidth();
 
 	private:
 		std::string m_preview;
 		std::vector<std::string> m_options;
 		int m_selectedIndex = -1;
 		bool m_isOpen = false;
+		float m_contentWidth = 0.f;
 
 		std::function<void(const std::string&, size_t)> m_onSelectCallback = nullptr;
 	};

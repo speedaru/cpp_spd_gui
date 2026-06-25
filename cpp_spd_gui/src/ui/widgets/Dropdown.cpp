@@ -2,6 +2,7 @@
 #include <core/event_dispatcher.h>
 #include <ui/widgets/Dropdown.h>
 #include <utils/widget_draw.h> 
+#include <utils/imgui_utils.h> 
 
 namespace spd::ui {
 	Dropdown::Dropdown(const std::string_view& preview, const char* tag)
@@ -31,20 +32,49 @@ namespace spd::ui {
     }
 
     std::string Dropdown::GetSelectedText() const {
-        if (m_selectedIndex >= 0 && m_selectedIndex < m_options.size()) {
+        if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_options.size())) {
             return m_options[m_selectedIndex];
         }
         return m_preview;
     }
 
-    ImVec2 Dropdown::OnCalcSize() {
-        // Enforce a stable baseline footprint by checking against the longest text element
+    void Dropdown::RenderBorder() {
+        // Skip default border rendering - we'll handle it ourselves
+        if (!m_style.borderThickness.value_or(0.f)) return;
+
+        ImDrawList* draw = ImGui::GetWindowDrawList();
+        ImVec4 defaultColor = utils::GetDefaultImGuiColor(ImGuiCol_Border);
+        Color color = m_style.borderColor.value_or(IMVEC4_TO_COLOR(defaultColor));
+        float thickness = m_style.borderThickness.value();
+        float rounding = ResolveStyle(&Style::rounding, 0.f);
+
+        ImVec2 pos = m_boxModel.CalcBoxPosition(m_position);
+        ImVec2 boxSize = m_boxModel.boxSize;
+
+        if (m_isOpen && !m_options.empty()) {
+            // Draw unified border around main widget + dropdown items
+            float itemHeight = ImGui::GetFontSize() + 8.f;
+            float totalHeight = boxSize.y + (itemHeight * m_options.size());
+
+            draw->AddRect(pos, pos + ImVec2(boxSize.x, totalHeight), color.imu32, rounding, 0, thickness);
+        } else {
+            // Draw normal border just around main widget
+            draw->AddRect(pos, pos + boxSize, color.imu32, rounding, 0, thickness);
+        }
+    }
+
+    float Dropdown::CalculateContentWidth() {
         float maxTextWidth = ImGui::CalcTextSize(m_preview.c_str()).x;
         for (const auto& opt : m_options) {
             maxTextWidth = std::max(maxTextWidth, ImGui::CalcTextSize(opt.c_str()).x);
         }
-        // Account for right-side icon padding buffers
-        return ImVec2(maxTextWidth + 44.0f, ImGui::GetFontSize());
+        return maxTextWidth;
+    }
+
+    ImVec2 Dropdown::OnCalcSize() {
+        m_contentWidth = CalculateContentWidth();
+        // Account for left padding, right chevron icon area, and horizontal padding
+        return ImVec2(m_contentWidth + 32.0f, ImGui::GetFontSize());
     }
 
     // =================================================================
@@ -118,28 +148,32 @@ namespace spd::ui {
     }
 
     void Dropdown::RenderFloatingMenu(ImVec2 anchorPos, ImVec2 anchorSize) {
-        // Place menu exactly below the anchor bar with a 2px crisp separation gap
-        ImVec2 popupPos = { anchorPos.x, anchorPos.y + anchorSize.y + 2.0f };
+        // Place menu exactly below the anchor bar with no gap
+        ImVec2 popupPos = { anchorPos.x, anchorPos.y + anchorSize.y };
         ImGui::SetNextWindowPos(popupPos);
 
-        ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | 
-                                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | 
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
                                  ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
 
         std::string popupWindowName = std::string("##Menu_") + m_id;
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.f, 4.f));
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, ResolveStyle(&Style::rounding, 4.f));
+        // No padding and no border to align flush with the main widget and sit inside the unified border
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.f, 0.f));
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ResolveStyle(&Style::bgColor, Color{ 24, 24, 24, 255 }).imu32);
+        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
 
         if (ImGui::Begin(popupWindowName.c_str(), nullptr, flags)) {
             for (size_t i = 0; i < m_options.size(); ++i) {
                 std::string itemId = m_id + std::string("_opt_") + std::to_string(i);
-                ImVec2 itemSize = ImVec2(anchorSize.x - 8.0f, ImGui::GetFontSize() + 8.f);
+                ImVec2 itemSize = ImVec2(anchorSize.x, ImGui::GetFontSize() + 8.f);
 
-                ImGui::SetCursorPosX(4.f);
+                ImGui::SetCursorPosX(0.f);
                 bool isSelected = (static_cast<int>(i) == m_selectedIndex);
-                
+
                 ImVec2 rowPos = ImGui::GetCursorScreenPos();
                 bool clicked = ImGui::Selectable(itemId.c_str(), isSelected, ImGuiSelectableFlags_None, itemSize);
 
@@ -156,6 +190,7 @@ namespace spd::ui {
 
                 if (clicked) {
                     m_selectedIndex = static_cast<int>(i);
+                    LOG_D("new selected index %llu\n", i);
                     m_isOpen = false;
 
                     if (m_onSelectCallback) {
@@ -172,7 +207,7 @@ namespace spd::ui {
             }
         }
         ImGui::End();
-        ImGui::PopStyleColor();
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleColor(2);
+        ImGui::PopStyleVar(4);
     }
 }

@@ -48,7 +48,8 @@ namespace spd::ui {
 
 		virtual void RenderBackground();
 
-        void RenderBorder();
+        virtual void RenderBorder();
+
         void GenerateID();
 
 	protected:

@@ -176,6 +176,7 @@
     <ClCompile Include="src\ui\Widget.cpp" />
     <ClCompile Include="src\ui\widgets\Button.cpp" />
     <ClCompile Include="src\ui\widgets\Label.cpp" />
+    <ClCompile Include="src\ui\widgets\RadioButton.cpp" />
     <ClCompile Include="src\ui\widgets\Slider.cpp" />
     <ClCompile Include="src\ui\widgets\Spacer.cpp" />
     <ClCompile Include="src\ui\widgets\TextBox.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="include\ui\widgets\Dropdown.h" />
     <ClInclude Include="include\ui\widgets\Label.h" />
     <ClInclude Include="include\ui\widgets\NavBar.h" />
+    <ClInclude Include="include\ui\widgets\RadioButton.h" />
     <ClInclude Include="include\ui\widgets\Slider.h" />
     <ClInclude Include="include\ui\widgets\Spacer.h" />
     <ClInclude Include="include\ui\widgets\TextBox.h" />

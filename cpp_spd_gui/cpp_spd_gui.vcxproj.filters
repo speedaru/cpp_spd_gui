@@ -111,6 +111,9 @@
     <ClCompile Include="src\ui\widgets\Dropdown.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ui\widgets\RadioButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\imgui\imconfig.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ui\widgets\Dropdown.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui\widgets\RadioButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

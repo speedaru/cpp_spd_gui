@@ -9,6 +9,7 @@
 #include <ui/widgets/Slider.h>
 #include <ui/widgets/HotkeySelector.h>
 #include <ui/widgets/Dropdown.h>
+#include <ui/widgets/RadioButton.h>
 
 #include <ui/layouts/ViewSwitcher.h>
 #include <ui/layouts/Hbox.h>
@@ -203,13 +204,13 @@ namespace views {
         root->m_style
             .SetSpacing(12.f);
 
-        // drop down
-        auto dropdown = root->Add(ui::MakeDropdown("preview", std::initializer_list<std::string_view>{ "nigga option1", "nigga option2", "nigga option 3" }));
-        dropdown->m_style
-            .SetPadding({ 8.f })
-            .SetRounding(0.f)
-            .SetBorderColor({ 255, 0, 255, 255 })
-            .SetBorderThickness(1.f);
+        //// drop down
+        //auto dropdown = root->Add(ui::MakeDropdown("preview", std::initializer_list<std::string_view>{ "nigga option1", "nigga option2", "nigga option 3" }));
+        //dropdown->m_style
+        //    .SetPadding({ 8.f })
+        //    .SetRounding(0.f)
+        //    .SetBorderColor({ 255, 0, 255, 255 })
+        //    .SetBorderThickness(1.f);
 
         // hotkey selector
         auto selector = root->Add(ui::MakeHotkeySelector("press a key", "hotkey_selector"));
@@ -219,6 +220,23 @@ namespace views {
         selector->OnKeyChanged([](uint32_t newKey) {
             LOG_D("new keycode: %u\n", newKey);
 		});
+
+        // radio buttons
+        auto radioContainer = root->Add(ui::MakeHbox());
+        radioContainer->SetTag("radio_container");
+        radioContainer->m_style
+            .SetSpacing(8.f);
+
+        auto createRadioButton = [](const char* group, const std::string& text) -> std::unique_ptr<ui::RadioButton> {
+            auto button = ui::MakeRadioButton(group, text);
+            button->SetBaseSize({ 32.f, 32.f });
+            return std::move(button);
+		};
+
+        auto radioAdd = radioContainer->Add(createRadioButton("group1", "add"));
+        auto radioEdit = radioContainer->Add(createRadioButton("group1", "edit"));
+        auto radioInsert = radioContainer->Add(createRadioButton("group1niggaerasima", "insert"));
+        auto radioDelete = radioContainer->Add(createRadioButton("group1", "delete"));
 
         return std::move(root);
     }

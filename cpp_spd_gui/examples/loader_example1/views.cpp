@@ -10,6 +10,7 @@
 #include <ui/widgets/HotkeySelector.h>
 #include <ui/widgets/Dropdown.h>
 #include <ui/widgets/RadioButton.h>
+#include <ui/widgets/Divider.h>
 
 #include <ui/layouts/ViewSwitcher.h>
 #include <ui/layouts/Hbox.h>
@@ -34,7 +35,8 @@ namespace views {
         rootScene->m_style
             .SetFont(assets::quicksand.Get(18.f))
             .SetAnimationSpeed(10.f)
-            .SetBorderColor({ 255, 205, 155, 60 }).SetBorderThickness(1.f);
+            .SetBorderColor({ 255, 205, 155, 60 })
+            .SetBorderThickness(1.f);
 
         // ==========================================================
         // 1. GLOBAL TOP NAVIGATION BAR
@@ -180,9 +182,9 @@ namespace views {
             return std::move(container);
 		};
 
-        auto b2_root = ui::MakeVbox();
-        b2_root->SetTag("b1_root");
-        b2_root->m_style
+        auto root = ui::MakeVbox();
+        root->SetTag("b1_root");
+        root->m_style
             .SetAlignment(ui::Alignment::Top)
             .SetMargin({ 0.f, 20.f })
             .SetSpacing(12.f)
@@ -191,11 +193,17 @@ namespace views {
 			.SetBorderColor({ 0, 0, 255, 255 })
 			.SetBorderThickness(0.f);
 
-        b2_root->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
-        b2_root->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.1f));
-        b2_root->Add(createSlider("AI sensitivity 2", 0.f, 3.f, 0.01f));
+        root->Add(createSlider("aim smoothness", 0.f, 3.f, 1.f));
+        root->Add(createSlider("AI sensitivity", 0.f, 3.f, 0.1f));
 
-        return std::move(b2_root);
+        auto divider = root->Add(ui::MakeHDivider(1.f));
+        divider->m_style
+            .SetMargin({ 0.f, 12.f })
+            .SetFrameBgColor({ 255, 205, 155, 255 });
+
+        root->Add(createSlider("AI sensitivity 2", 0.f, 3.f, 0.01f));
+
+        return std::move(root);
     }
 
     std::unique_ptr<ui::Widget> BuildB2Tab(ui::ViewSwitcher* masterDeck) {

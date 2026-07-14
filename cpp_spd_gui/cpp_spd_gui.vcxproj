@@ -157,6 +157,7 @@
     <ClCompile Include="src\core\event_dispatcher.cpp" />
     <ClCompile Include="src\ui\fx\Animator.cpp" />
     <ClCompile Include="src\ui\layouts\ViewSwitcher.cpp" />
+    <ClCompile Include="src\ui\widgets\Divider.cpp" />
     <ClCompile Include="src\ui\widgets\Dropdown.cpp" />
     <ClCompile Include="src\ui\widgets\NavBar.cpp" />
     <ClCompile Include="src\backend\render.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="include\ui\types.h" />
     <ClInclude Include="include\ui\Widget.h" />
     <ClInclude Include="include\ui\widgets\Button.h" />
+    <ClInclude Include="include\ui\widgets\Divider.h" />
     <ClInclude Include="include\ui\widgets\Dropdown.h" />
     <ClInclude Include="include\ui\widgets\Label.h" />
     <ClInclude Include="include\ui\widgets\NavBar.h" />

@@ -2,6 +2,33 @@
 #include <core/Font.h>
 
 namespace spd::core {
+    std::vector<ImWchar> GlyphRangesToImWchar(GlyphRanges glyphRanges) {
+        std::vector<ImWchar> out;
+
+        if (glyphRanges & GlyphRanges_Basic) {
+            out.push_back(0x0020);
+            out.push_back(0x00FF);
+        }
+        if (glyphRanges & GlyphRanges_Cyrillic) {
+            out.push_back(0x0400);
+            out.push_back(0x052F);
+        }
+        if (glyphRanges & GlyphRanges_CyrillicExtendedA) {
+            out.push_back(0x2DE0);
+            out.push_back(0x2DFF);
+        }
+        if (glyphRanges & GlyphRanges_CyrillicExtendedB) {
+            out.push_back(0xA640);
+            out.push_back(0xA69F);
+        }
+        if (glyphRanges & GlyphRanges_PrivateUserArea) {
+            out.push_back(0xE000);
+            out.push_back(0xF8FF);
+        }
+
+        return out;
+    }
+
 	ImFont* Font::Get(float size) const {
         // find requested size
         auto it = m_sizes.find(size);
@@ -28,7 +55,7 @@ namespace spd::core {
         m_defaultSize = size;
     }
 
-    Font Font::LoadFromMemory(const void* ttfData, size_t ttfSize, const std::vector<float>& sizes, const ImFontConfig* customCfg) {
+    Font Font::LoadFromMemory(const void* ttfData, size_t ttfSize, const std::vector<float>& sizes, const ImFontConfig* customCfg, GlyphRanges glyphRanges) {
         Font result;
         if (sizes.empty()) return result;
 
@@ -45,7 +72,8 @@ namespace spd::core {
 
         // make font
         for (float s : sizes) {
-            ImFont* imFont = io.Fonts->AddFontFromMemoryTTF((void*)ttfData, (int)ttfSize, s, &cfg);
+            std::vector<ImWchar> glyphs = GlyphRangesToImWchar(glyphRanges);
+            ImFont* imFont = io.Fonts->AddFontFromMemoryTTF((void*)ttfData, (int)ttfSize, s, &cfg, glyphs.data());
             result.m_sizes[s] = imFont;
         }
 

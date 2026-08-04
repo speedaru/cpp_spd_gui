@@ -21,6 +21,14 @@ namespace spd::core {
     public:
         Font() = default;
 
+        // disable copying bcs cant properly copy glyphs bcs will break ImFont*
+        Font(const Font&) = delete;
+        Font& operator=(const Font&) = delete;
+
+        // enable moving
+        Font(Font&&) = default;
+        Font& operator=(Font&&) = default;
+
         // retrieve the exact font size or safely fallback
         ImFont* Get(float size) const;
 

@@ -70,9 +70,11 @@ namespace spd::core {
             cfg.OversampleV = 2;
         }
 
+        // create glyphs
+		result.m_glyphRanges = GlyphRangesToImWchar(glyphRanges);
+
         // make font
         for (float s : sizes) {
-            result.m_glyphRanges = GlyphRangesToImWchar(glyphRanges);
             ImFont* imFont = io.Fonts->AddFontFromMemoryTTF((void*)ttfData, (int)ttfSize, s, &cfg, result.m_glyphRanges.data());
             result.m_sizes[s] = imFont;
         }

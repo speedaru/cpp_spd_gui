@@ -72,8 +72,8 @@ namespace spd::core {
 
         // make font
         for (float s : sizes) {
-            std::vector<ImWchar> glyphs = GlyphRangesToImWchar(glyphRanges);
-            ImFont* imFont = io.Fonts->AddFontFromMemoryTTF((void*)ttfData, (int)ttfSize, s, &cfg, glyphs.data());
+            result.m_glyphRanges = GlyphRangesToImWchar(glyphRanges);
+            ImFont* imFont = io.Fonts->AddFontFromMemoryTTF((void*)ttfData, (int)ttfSize, s, &cfg, result.m_glyphRanges.data());
             result.m_sizes[s] = imFont;
         }
 

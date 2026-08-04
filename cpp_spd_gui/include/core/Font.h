@@ -28,6 +28,7 @@ namespace spd::core {
         void SetDefaultSize(float size);
 
     private:
+        std::vector<ImWchar> m_glyphRanges;
         std::unordered_map<float, ImFont*> m_sizes;
         float m_defaultSize = 0.0f;
 

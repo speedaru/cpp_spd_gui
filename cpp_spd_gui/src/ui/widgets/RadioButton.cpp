@@ -100,7 +100,7 @@ namespace spd::ui {
 
 		// register only if not already registered
 		auto it = std::find(buttons.begin(), buttons.end(), this);
-		if (it != buttons.end()) {
+		if (it == buttons.end()) {
 			buttons.push_back(this);
 		}
 	}

@@ -61,14 +61,14 @@ namespace spd::ui {
         RadioGroup GetGroup() const;
         void SetGroup(const char* radioGroup);
 
+		// activate this button, and deactivate others from same group
+		void Activate();
+
 	protected:
 		ImVec2 OnCalcSize() override;
 		void OnRender() override;
 
     private:
-		// activate this button, and deactivate others from same group
-		void Activate();
-
         // register this button into static list
         void Register();
 

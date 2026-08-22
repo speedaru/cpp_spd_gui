@@ -45,6 +45,18 @@ namespace spd::ui {
 		m_group = RadioGroup(radioGroup);
 	}
 
+	void RadioButton::Activate() {
+		if (!m_group.IsValid() || m_activated) return;
+
+		// deactivate all buttons from this group
+		for (auto& button : s_buttons[m_group]) {
+			button->m_activated = false;
+		}
+
+		// activate only this one
+		m_activated = true;
+	}
+
 	ImVec2 RadioButton::OnCalcSize() {
 		return ImGui::CalcTextSize(m_text.data(), m_text.data() + m_text.length());
 	}
@@ -82,18 +94,6 @@ namespace spd::ui {
         ImGui::SetCursorPos(textPos);
         ImGui::TextUnformatted(m_text.c_str());
         utils::PopTextColor(textPushed);
-	}
-
-	void RadioButton::Activate() {
-		if (!m_group.IsValid() || m_activated) return;
-
-		// deactivate all buttons from this group
-		for (auto& button : s_buttons[m_group]) {
-			button->m_activated = false;
-		}
-
-		// activate only this one
-		m_activated = true;
 	}
 
 	void RadioButton::Register() {

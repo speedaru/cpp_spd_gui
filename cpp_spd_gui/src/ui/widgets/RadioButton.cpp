@@ -87,12 +87,13 @@ namespace spd::ui {
 	void RadioButton::Activate() {
 		if (!m_group.IsValid() || m_activated) return;
 
-		m_activated = true;
-
-		// deactivate all other buttons from this group
+		// deactivate all buttons from this group
 		for (auto& button : s_buttons[m_group]) {
 			button->m_activated = false;
 		}
+
+		// activate only this one
+		m_activated = true;
 	}
 
 	void RadioButton::Register() {

@@ -266,7 +266,7 @@ namespace views {
 		}
 		else {
 			statusLabel->SetText("Invalid or Expired Serial Key");
-			statusLabel->m_style.SetTextColor({ 255, 50, 50, 255 });
+            statusLabel->m_style.SetTextColor(ui::Colors::Red);
 		}
     }
 }

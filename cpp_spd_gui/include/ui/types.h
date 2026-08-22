@@ -3,18 +3,25 @@
 #include <string>
 #include <imgui/imgui.h>
 
-typedef unsigned int        ImU32;  // 32-bit unsigned integer (often used to store packed colors)
-
 namespace spd::ui {
 	union Color {
 		struct {
-			uint8_t r;
-			uint8_t g;
-			uint8_t b;
-			uint8_t a;
+			uint8_t r, g, b, a;
 		};
 		ImU32 imu32;
 	};
+
+	namespace Colors {
+		inline constexpr Color Red = { 255, 0, 0, 255 };
+		inline constexpr Color Yellow = { 255, 255, 0, 255 };
+		inline constexpr Color Pink = { 255, 0, 255, 255 };
+
+		inline constexpr Color Green = { 0, 128, 0, 255 };
+		inline constexpr Color Lime = { 0, 255, 0, 255 };
+
+		inline constexpr Color Cyan = { 0, 255, 255, 255 };
+		inline constexpr Color Blue = { 0, 0, 255, 255 };
+	}
 
 	enum class Alignment : uint8_t {
 		Left = 1 << 0,

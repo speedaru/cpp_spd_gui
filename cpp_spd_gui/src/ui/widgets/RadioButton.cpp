@@ -89,32 +89,32 @@ namespace spd::ui {
 
 		m_activated = true;
 
-		// iterate all buttons and deactivate all others from group
-		for (const auto& node : s_buttons) {
-			// skip other group
-			if (node.button == this || !m_group.IsSameGroup(node.group)) {
-				continue;
-			}
-
-			node.button->m_activated = false;
+		// deactivate all other buttons from this group
+		for (auto& button : s_buttons[m_group]) {
+			button->m_activated = false;
 		}
 	}
 
 	void RadioButton::Register() {
-		ButtonNode group = { m_group, this };
-		s_buttons.emplace_back(group);
+		auto& buttons = s_buttons[m_group];
+
+		// register only if not already registered
+		auto it = std::find(buttons.begin(), buttons.end(), this);
+		if (it != buttons.end()) {
+			buttons.push_back(this);
+		}
 	}
 
 	void RadioButton::Deregister() {
-		auto it = std::find_if(s_buttons.begin(), s_buttons.end(), [this](const ButtonNode& node) {
-			return node.button == this;
-		});
+		auto& buttons = s_buttons[m_group];
 
-		if (it == s_buttons.end()) {
+		// if not registered
+		auto it = std::find(buttons.begin(), buttons.end(), this);
+		if (it == buttons.end()) {
 			LOG_W("trying to deregister radio button, but it was not registered\n");
 			return;
 		}
 
-		s_buttons.erase(it);
+		buttons.erase(it);
 	}
 }

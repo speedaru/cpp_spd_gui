@@ -14,32 +14,32 @@ namespace spd::ui {
 
 		RadioGroup(const char* str) {
 			size_t len = strlen(str);
-			// only copy if valid length
-			if (len <= MAX_LEN) {
-				// copy buff and set len
-				memcpy(buff, str, MAX_LEN);
-				length = static_cast<uint8_t>(len);
-				return;
-			}
 
-			// invalid length
-			memset(buff, 0xaa, MAX_LEN);
-			length = 0;
-			LOG_W("radio button group name too long: %s (max %zu)\n", str, MAX_LEN);
+			// copy buff and set len
+			memcpy(buff, str, std::min(len, MAX_LEN));
+			length = static_cast<uint8_t>(len);
+
+			if (len > MAX_LEN) {
+				LOG_W("radio button group name too long: %s (max %zu)\n", str, MAX_LEN);
+			}
 		}
 
-		bool IsSameGroup(const RadioGroup& other) {
+		bool operator==(const RadioGroup& other) const {
 			if (!length || length != other.length) return false;
 
-			uint8_t i = 0;
-			for (uint8_t i = 0; i < length; i++) {
-				if (buff[i] != other.buff[i]) return false;
-			}
-
-			return true;
+			// compare buffers
+			return memcmp(buff, other.buff, length) == 0;
 		}
 
 		inline bool IsValid() const { return length > 0; }
+	};
+
+	struct RadioGroupHash {
+		std::size_t operator()(const RadioGroup& group) const {
+			return std::hash<std::string_view>{}(
+				std::string_view(group.buff, group.length)
+			);
+		}
 	};
 
 	class RadioButton : public Widget {
@@ -76,13 +76,8 @@ namespace spd::ui {
         void Deregister();
 
 	private:
-        struct ButtonNode {
-            RadioGroup group;
-            RadioButton* button;
-        };
-
         // map of all radio button groups with the list of buttons in that group
-        inline static std::vector<ButtonNode> s_buttons;
+		inline static std::unordered_map<RadioGroup, std::vector<RadioButton*>, RadioGroupHash> s_buttons;
 
         RadioGroup m_group;
         std::string m_text;

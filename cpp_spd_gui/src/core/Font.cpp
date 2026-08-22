@@ -5,7 +5,7 @@ namespace spd::core {
     std::vector<ImWchar> GlyphRangesToImWchar(GlyphRanges glyphRanges) {
         std::vector<ImWchar> out;
 
-        if (glyphRanges & GlyphRanges_Basic) {
+        if (glyphRanges & GlyphRanges_BasicLatin) {
             out.push_back(0x0020);
             out.push_back(0x00FF);
         }
@@ -26,6 +26,7 @@ namespace spd::core {
             out.push_back(0xF8FF);
         }
 
+        out.push_back(0x0); // needs to be zero terminated
         return out;
     }
 
